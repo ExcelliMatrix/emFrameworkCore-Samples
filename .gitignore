@@ -338,3 +338,5 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/CodeGenSample/CodeGenSample.Design.Web/CodeGenReference/CodeGenSample.Design.Web.dll
+/CodeGenSample/CodeGenSample.Design.App/CodeGenReference/CodeGenSample.Design.App.dll

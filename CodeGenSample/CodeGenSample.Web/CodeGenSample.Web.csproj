@@ -5,11 +5,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="emFrameworkCore.Core" Version="1.14.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entity.Generated\" />
+    <ProjectReference Include="..\CodeGenSample.Design.App\CodeGenSample.Design.App.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Entity.Generated\(Entity.WebAPI).tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="Entity.Generated\(Entity.SQL).tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="Entity.Generated\%28Entity%29.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
   </ItemGroup>
 
 </Project>
