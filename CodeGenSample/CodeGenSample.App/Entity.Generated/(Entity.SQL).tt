@@ -1,5 +1,5 @@
 ﻿<#@ template language="C#" hostspecific="true" debug="True" #>
-<#@ assembly name="$(TargetDir)emFramework.CodeGen.Core.dll" #> 
+<#@ assembly name="$(SolutionDir)(External Libraries)\emFrameworkCore.CodeGen.dll" #> 
 <#@ assembly name="Microsoft.SqlServer.Smo" #>
 <#@ assembly name="Microsoft.SqlServer.ConnectionInfo" #>
 <#@ assembly name="Microsoft.SqlServer.Management.Sdk.Sfc" #>
@@ -8,7 +8,7 @@
 <#@ assembly name="System.Data" #>
 <#@ assembly name="System.Xml" #>
 <#@ import namespace="System" #>
-<#@ import namespace="emFramework.CodeGen.Core" #>
+<#@ import namespace="emFrameworkCore.CodeGen" #>
 <#@ import namespace="Microsoft.SqlServer.Management.Smo" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.IO" #>
@@ -30,7 +30,7 @@
   foreach (emT4.Entity EntityItem in emT4.EntityItems())
   {
     emT4.LogWrite(emT4.OutputFilename(EntityItem));
-    string sTableName = emT4.MetadataDictionary_AttributeProperty(EntityItem.Name + "EntityDesign", "Table", "Name").FirstOrDefault().Value.Value;
+    string sTableName = emT4.MetadataDictionary_AttributeProperty(EntityItem.Name + "AppEntityDesign", "DatabaseTable", "Name").FirstOrDefault().Value.Value;
 #>
 //********************************************************************
 //*                                                                  *
@@ -51,7 +51,7 @@
 
 namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 {
-   public partial class <#=EntityItem.Name#>AppEntity
+   public partial class <#=EntityItem.Name#>AppEntity : <#=EntityItem.Name#>AppEntityDesign
    {
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
@@ -60,104 +60,6 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     public enum AuditLogLevels { Informational, Warning, Critical }
 
     //---------------------------------------------------------------------------------------------
-<# if (EntityItem.IncludeMethod("SQLCommand_AuditLog")) { 
-#>    //---------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Creates the SqlCommand needed to create a AuditLog entry for the specified CRUDAction.
-    /// </summary>
-    /// <param name="a_xSQLConnection"></param>
-    /// <param name="a_xCRUDAction"></param>
-    /// <returns>SqlCommand</returns>
-    public SqlCommand SQLCommand_AuditLog(SqlConnection a_xSQLConnection, <#=EntityItem.Name#>AppEntity.CRUDAction a_xCRUDAction)
-    {
-      return SQLCommand_AuditLog(a_xSQLConnection, a_xCRUDAction, GUID);
-    }
-
-    //---------------------------------------------------------------------------------------------
-    //---------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Creates the SqlCommand needed to create a AuditLog entry for the specified CRUDAction.
-    /// </summary>
-    /// <param name="a_xSQLConnection"></param>
-    /// <param name="a_xCRUDAction"></param>
-    /// <param name="a_xTableRowGUID"></param>
-    /// <returns>SqlCommand</returns>
-    public SqlCommand SQLCommand_AuditLog(SqlConnection a_xSQLConnection, <#=EntityItem.Name#>AppEntity.CRUDAction a_xCRUDAction, GUID a_xTableRowGUID)
-    {
-      string sSQLStatement = "";            
-      sSQLStatement =
-      $@"
-        insert into emF_UserAuditLog
-        (
-          ApplicationFunction, 
-          ApplicationName, 
-          CreateDateTime, 
-          CreateHostName, 
-          CreateIPAddress,  
-          CreateUserGUID, 
-          OperationDetail, 
-          OperationGUID, 
-          OperationTableName, 
-          TenantGUID,     
-          UserAuditLogGUID
-        )
-        values
-        (
-          @ApplicationFunction, 
-          @ApplicationName, 
-          @CreateDateTime, 
-          @CreateHostName, 
-          @CreateIPAddress, 
-          @CreateUserGUID, 
-          @OperationDetail, 
-          @OperationGUID, 
-          @OperationTableName, 
-          @TenantGUID, 
-          @UserAuditLogGUID
-        )
-      ";
-
-      AuditLogTypes enumAuditLogType = AuditLogTypes.CRUD;
-      string ApplicationName = Global.ApplicationName;
-      string ApplicationFunction = enumAuditLogType.ToString();
-      string sCRUDAction = a_xCRUDAction.ToString();
-      string OperationTableName = TableName;
-      GUID OperationGUID = a_xTableRowGUID;
-
-      GUID xAuditLogGUID = new GUID();
-
-      UserInfo xUserInfo = UserInfo;
-      if (xUserInfo == null)
-      {
-        xUserInfo = new UserInfo
-        {
-          UserHostName = "",
-          UserIPAddress = "",
-          TenantGUID = GUID.NewGUID("{00000000-0000-0000-0000-000000000000}"),
-          UserGUID = GUID.NewGUID("{00000000-0000-0000-0000-000000000000}")
-        };
-      }
-
-      SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand.Parameters.Add(new SqlParameter("@ApplicationFunction", ApplicationFunction.ToDBNull()));
-      xSQLCommand.Parameters.Add(new SqlParameter("@ApplicationName", ApplicationName.ToDBNull()));
-      xSQLCommand.Parameters.Add(new SqlParameter("@CreateDateTime", System.DateTime.Now));
-      xSQLCommand.Parameters.Add(new SqlParameter("@CreateHostName", xUserInfo.UserHostName.ToDBNull()));
-      xSQLCommand.Parameters.Add(new SqlParameter("@CreateIPAddress", xUserInfo.UserIPAddress.ToDBNull()));
-      xSQLCommand.Parameters.Add(new SqlParameter("@CreateUserGUID", xUserInfo.UserGUID != null ? xUserInfo.UserGUID.ToString().ToDBNull() : System.DBNull.Value));
-      xSQLCommand.Parameters.Add(new SqlParameter("@OperationDetail", System.DBNull.Value));
-      xSQLCommand.Parameters.Add(new SqlParameter("@OperationGUID", OperationGUID != null ? OperationGUID.ToString().ToDBNull() : System.DBNull.Value));
-      xSQLCommand.Parameters.Add(new SqlParameter("@OperationTableName", OperationTableName.ToDBNull()));
-      xSQLCommand.Parameters.Add(new SqlParameter("@TenantGUID", xUserInfo.TenantGUID != null ? xUserInfo.TenantGUID.ToString().ToDBNull() : System.DBNull.Value));
-      xSQLCommand.Parameters.Add(new SqlParameter("@UserAuditLogGUID", xAuditLogGUID.ToString()));
-
-      return xSQLCommand;
-    }
-
-    //---------------------------------------------------------------------------------------------
-<# } #>
 <# if (EntityItem.IncludeMethod("SQLCommand_Create")) { 
 #>    //---------------------------------------------------------------------------------------------
 
@@ -170,7 +72,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
         insert into <#=sTableName#>
         (
 <#
-  foreach (emT4.MetadataEntry xMetadataEntry in emT4.GetMetadataEntries(EntityItem.DesignName, emT4.EntryTypes.TypeProperty, "Column", "Key"))
+  foreach (emT4.MetadataEntry xMetadataEntry in emT4.GetMetadataEntries(EntityItem.DesignTierName, emT4.EntryTypes.TypeProperty, "Column", "Key"))
   {
 #>
           <#=xMetadataEntry.PropertyName#>, 
@@ -182,7 +84,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
         values
         (
 <#
-  foreach (emT4.MetadataEntry xMetadataEntry in emT4.GetMetadataEntries(EntityItem.DesignName, emT4.EntryTypes.TypeProperty, "Column", "Key"))
+  foreach (emT4.MetadataEntry xMetadataEntry in emT4.GetMetadataEntries(EntityItem.DesignTierName, emT4.EntryTypes.TypeProperty, "Column", "Key"))
   {
 #>
           @<#=xMetadataEntry.PropertyName#>, 
@@ -192,15 +94,15 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           @<#=EntityItem.Name#>GUID
         )
       ";
-      if (GUID == null)
-        GUID = new GUID();
+      if (@<#=EntityItem.Name#>GUID == null)
+        <#=EntityItem.Name#>GUID = new GUID();
 
       SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
 <#
-  foreach (emT4.MetadataEntry xMetadataEntry in emT4.GetMetadataEntries(EntityItem.DesignName, emT4.EntryTypes.TypeProperty, "Column", "Key"))
+  foreach (emT4.MetadataEntry xMetadataEntry in emT4.GetMetadataEntries(EntityItem.DesignTierName, emT4.EntryTypes.TypeProperty, "Column", "Key"))
   {
  if (xMetadataEntry.PropertyName.Contains("GUID")) { #>
-      xSQLCommand.Parameters.Add(new SqlParameter("@<#=xMetadataEntry.PropertyName#>", <#=xMetadataEntry.PropertyName#> != null ? <#=xMetadataEntry.PropertyName#>.ToString().ToDBNull() : System.DBNull.Value));
+      xSQLCommand.Parameters.Add(new SqlParameter("@<#=xMetadataEntry.PropertyName#>", <#=xMetadataEntry.PropertyName#> == null ? System.DBNull.Value : <#=xMetadataEntry.PropertyName#>.ToString().ToDBNull()));
 <# 
   }else{ 
 #>
@@ -209,7 +111,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
   }
   }
 #>
-      xSQLCommand.Parameters.Add(new SqlParameter("@<#=EntityItem.Name#>GUID", GUID.ToString()));
+      xSQLCommand.Parameters.Add(new SqlParameter("@<#=EntityItem.Name#>GUID", <#=EntityItem.Name#>GUID.ToString()));
 
       return xSQLCommand;
     }
@@ -221,7 +123,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     public SqlCommand SQLCommand_Delete(SqlConnection a_xSQLConnection)
     {
-      SqlCommand xSQLCommand = SQLCommand_Delete(a_xSQLConnection, GUID);
+      SqlCommand xSQLCommand = SQLCommand_Delete(a_xSQLConnection, <#=EntityItem.Name#>GUID);
 
       return xSQLCommand;
     }
@@ -237,14 +139,12 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
       sSQLStatement =
         $@"
-          update <#=sTableName#>
-            set
-              <#=EntityItem.Name#>Deleted = 'True'
+          delete from <#=sTableName#>
             where
-              <#=EntityItem.Name#>GUID = @GUID;
+              <#=EntityItem.Name#>GUID = @<#=EntityItem.Name#>GUID;
         ";
       SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand.Parameters.Add(new SqlParameter("@GUID", a_xGUID.ToString()));
+      xSQLCommand.Parameters.Add(new SqlParameter("@<#=EntityItem.Name#>GUID", a_xGUID.ToString()));
 
       return xSQLCommand;
     }
@@ -261,16 +161,25 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       string sSQLStatement = "";
 
       SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand = DataRequestExtension.ApplyDataRequest<<#=EntityItem.Name#>EntityDesign>(xSQLCommand, a_xDataRequest);
+      xSQLCommand = DataRequestExtension.ApplyDataRequest<<#=EntityItem.Name#>AppEntityDesign>(xSQLCommand, a_xDataRequest);
 
       return xSQLCommand;
     }
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-
 <# if (EntityItem.IncludeMethod("SQLCommand_Read")) {
 #>    //---------------------------------------------------------------------------------------------
+
+    public SqlCommand SQLCommand_Read(SqlConnection a_xSQLConnection)
+    {
+      SqlCommand xSQLCommand = SQLCommand_Read(a_xSQLConnection, <#=EntityItem.Name#>GUID);
+
+      return xSQLCommand;
+    }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
 
     public SqlCommand SQLCommand_Read(SqlConnection a_xSQLConnection, GUID a_xGUID)
     {
@@ -283,11 +192,11 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           from 
             <#=sTableName#>
           where
-            <#=EntityItem.Name#>GUID = @GUID
+            <#=EntityItem.Name#>GUID = @<#=EntityItem.Name#>GUID
       ";
 
       SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand.Parameters.Add(new SqlParameter("GUID", a_xGUID.ToString()));
+      xSQLCommand.Parameters.Add(new SqlParameter("<#=EntityItem.Name#>GUID", a_xGUID.ToString()));
 
       return xSQLCommand;
     }
@@ -300,7 +209,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     public SqlCommand SQLCommand_Update(SqlConnection a_xSQLConnection)
     {
       string sSQLStatement = "";
-   <# List<emT4.MetadataEntry> xListMetadatEntry = emT4.GetMetadataEntries(EntityItem.DesignName, emT4.EntryTypes.TypeProperty, "Column", "Key"); #>
+   <# List<emT4.MetadataEntry> xListMetadatEntry = emT4.GetMetadataEntries(EntityItem.DesignTierName, emT4.EntryTypes.TypeProperty, "Column", "Key"); #>
 
       sSQLStatement =
       $@"
@@ -322,7 +231,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       ";
 
       SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-<#foreach (emT4.MetadataEntry xMetadataEntry in emT4.GetMetadataEntries(EntityItem.DesignName, emT4.EntryTypes.TypeProperty, "Column", "Key"))
+<#foreach (emT4.MetadataEntry xMetadataEntry in emT4.GetMetadataEntries(EntityItem.DesignTierName, emT4.EntryTypes.TypeProperty, "Column", "Key"))
   {
  if (xMetadataEntry.PropertyName.Contains("GUID")) { #>
       xSQLCommand.Parameters.Add(new SqlParameter("@<#=xMetadataEntry.PropertyName#>", <#=xMetadataEntry.PropertyName#>.ToString().ToDBNull()));
@@ -332,7 +241,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
   }
   }
 #>
-      xSQLCommand.Parameters.Add(new SqlParameter("@<#=EntityItem.Name#>GUID", GUID.ToString()));
+      xSQLCommand.Parameters.Add(new SqlParameter("@<#=EntityItem.Name#>GUID", <#=EntityItem.Name#>GUID.ToString()));
 
       return xSQLCommand;
     }
@@ -340,69 +249,16 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //---------------------------------------------------------------------------------------------
 <# } #>
     //---------------------------------------------------------------------------------------------
-
-
-	<# if(EntityItem.Name == "Capability"){ #>
-
-	public SqlCommand SQLCommand_Load_ByRoleGUID(SqlConnection a_xSQLConnection, GUID a_xRoleGUID)
-    {
-      string sSQLStatement = "";
-
-      sSQLStatement = @"select distinct
-                 emF_Capability.CapabilityGUID,
-                 emF_Capability.CapabilityCode,
-                 emF_Capability.CapabilityName,
-                 emF_Capability.CapabilityDescription,
-                 emF_Capability.CapabilityDeleted
-                 from  emF_Capability inner join emF_RoleCapability  on emF_Capability.CapabilityGUID = emF_RoleCapability.CapabilityGUID
-                 where emF_RoleCapability.RoleGUID = @RoleGUID and emF_RoleCapability.RoleCapabilityDeleted = 'False' and
-                 emF_Capability.CapabilityDeleted = 'False'  ";
-
-      SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand.Parameters.Add(new SqlParameter("RoleGUID", a_xRoleGUID.GUIDString));
-
-      return xSQLCommand;
-    }
-
-<#	} #>
-
-
-	<# if(EntityItem.Name == "User"){ #>
-
-	 public SqlCommand SQLCommand_Load_ByRoleGUID(SqlConnection a_xSQLConnection, GUID a_xRoleGUID)
-    {
-      string sSQLStatement = "";
-
-      sSQLStatement = @"select distinct
-                            emF_User.UserGUID,
-                            emF_User.UserUsername,
-                            emF_User.UserFirstName,
-                            emF_User.UserMiddleName,
-                            emF_User.UserLastName
-                            from  emF_User inner join emF_UserRole  on emF_User.UserGUID = emF_UserRole.UserGUID
-                            where emF_UserRole.RoleGUID = @RoleGUID and emF_UserRole.UserRoleDeleted = 'False' and
-                            emF_User.UserDeleted = 'False'  ";
-
-      SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand.Parameters.Add(new SqlParameter("RoleGUID", a_xRoleGUID.GUIDString));
-
-      return xSQLCommand;
-    }
-
-<#	} #>
-
-
-    //---------------------------------------------------------------------------------------------
     //-----
-    //----- Metadata available for "<#=emT4.FormatEntity(EntityItem.DesignName)#>"
+    //----- Metadata available for "<#=emT4.FormatEntity(EntityItem.DesignTierName)#>"
     //-----
 <#
-  foreach (string sKey in emT4.MetadataDictionary(EntityItem.DesignName).Keys)
+  foreach (string sKey in emT4.MetadataDictionary(EntityItem.DesignTierName).Keys)
   {
     if (emT4.MetadataDictionary()[sKey].EntryType == emT4.EntryTypes.TypeProperty)
     {
 #>
-    //----- <#=emT4.MetadataDictionary()[sKey].PropertyName.PadRight(40)#>  Key = "<#=sKey#>"
+    //----- <#=emT4.MetadataDictionary()[sKey].PropertyName.PadRight(40)#> Key = "<#=sKey#>"
 <#
     }
   }
@@ -410,22 +266,14 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //-----
     //-----
 <#
-  foreach (string sKey in emT4.MetadataDictionary(EntityItem.DesignName).Keys)
+  foreach (string sKey in emT4.MetadataDictionary(EntityItem.DesignTierName).Keys)
   {
 #>
-    //----- <#=("(" + emT4.MetadataDictionary()[sKey].EntryType + ")").PadRight(32)#> <#=sKey#> == "<#=emT4.MetadataDictionary()[sKey].Value??"null"#>"
+    //----- <#=("(" + emT4.MetadataDictionary()[sKey].EntryType + ")").PadRight(40)#> <#=sKey#> == "<#=emT4.MetadataDictionary()[sKey].Value??"null"#>"
 <#
   }
 #>
     //-----
-    //---------------------------------------------------------------------------------------------
-    //---------------------------------------------------------------------------------------------
-
-    public string CodeGenMarker_SQL { get { return emFramework.CodeGen.Core.emT4.emT4GUID; } }
-    //NOTE: This code is used to ensure compiler binding to the emFramework.CodeGen.Core.dll so
-    //      that the .dll file is placed in the /bin/debug folder during compile. It may also be
-    //      used to confirm that the property CodeGen assembly is used.
-
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
   }

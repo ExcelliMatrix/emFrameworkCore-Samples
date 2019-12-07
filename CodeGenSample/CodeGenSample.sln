@@ -185,6 +185,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "(External Libraries)", "(Ex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "5.CodeGenSample.App", "CodeGenSample.App\5.CodeGenSample.App.csproj", "{36BA2AA6-55A5-47B5-BB95-CE0583CC7142}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "0.CodeGenSample", "CodeGenSample\0.CodeGenSample.csproj", "{5A49D0A3-716B-4425-9289-03327A9F599F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -211,6 +213,10 @@ Global
 		{36BA2AA6-55A5-47B5-BB95-CE0583CC7142}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36BA2AA6-55A5-47B5-BB95-CE0583CC7142}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36BA2AA6-55A5-47B5-BB95-CE0583CC7142}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A49D0A3-716B-4425-9289-03327A9F599F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A49D0A3-716B-4425-9289-03327A9F599F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A49D0A3-716B-4425-9289-03327A9F599F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A49D0A3-716B-4425-9289-03327A9F599F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

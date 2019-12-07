@@ -10,13 +10,21 @@
   <DictionaryEntry Key="ClassNamespace" Value="CodeGenSample.App.Entity" />
 
   <Usings>
-    <Using Name="System" />
+    <Using Name="CodeGenSample.Design.App" />
     <Using Name="emFrameworkCore.Core" />
+    <Using Name="emFrameworkCore.Data" />
+    <Using Name="emFrameworkCore.Database" />
+    <Using Name="emFrameworkCore.Database.Extensions" />
+    <Using Name="Newtonsoft.Json" />
+    <Using Name="System" />
+    <Using Name="System.Collections.Generic" />
+    <Using Name="System.Data.SqlClient" />
+    <Using Name="System.Linq" />
   </Usings>
 
   <Entities>
-    <Entity Name="Automobile"                PluralName="Automobile" />
-    <Entity Name="AutomobilePart"            PluralName="AutomobilePart" />
+    <Entity Name="Automobile"                PluralName="Automobiles" />
+    <Entity Name="AutomobilePart"            PluralName="AutomobileParts" />
   </Entities>
 
 </CodeGen>

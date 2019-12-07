@@ -8,11 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="emFrameworkCore.Core" Version="1.19.0" />
-    <PackageReference Include="emFrameworkCore.Data" Version="1.14.0" />
+    <PackageReference Include="emFrameworkCore.Data" Version="1.15.0" />
+    <PackageReference Include="emFrameworkCore.Database" Version="1.20.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CodeGenSample.Design.App\3.CodeGenSample.Design.App.csproj" />
+    <ProjectReference Include="..\CodeGenSample\0.CodeGenSample.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,8 +22,19 @@
       <LastGenOutput>(Entity).txt</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
     </None>
+    <None Update="Entity.Generated\%28Entity%29.txt">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>(Entity).tt</DependentUpon>
+    </None>
     <None Update="Entity.Generated\%28Entity.SQL%29.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>(Entity.SQL).txt</LastGenOutput>
+    </None>
+    <None Update="Entity.Generated\%28Entity.SQL%29.txt">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>(Entity.SQL).tt</DependentUpon>
     </None>
   </ItemGroup>
 

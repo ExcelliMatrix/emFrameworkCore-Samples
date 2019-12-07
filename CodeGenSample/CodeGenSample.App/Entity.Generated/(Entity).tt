@@ -52,7 +52,7 @@ using System.Linq;
 
 namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 {
- public partial class <#=EntityItem.Name#>AppEntity : <#=EntityItem.Name#>EntityDesign, IEntity_SQLConnection<<#=EntityItem.Name#>AppEntity>
+ public partial class <#=EntityItem.Name#>AppEntity : <#=EntityItem.Name#>AppEntityDesign, emFrameworkCore.Data.IEntity_SQLConnection<<#=EntityItem.Name#>AppEntity>
   {
 
     //---------------------------------------------------------------------------------------------
@@ -76,48 +76,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     //---------------------------------------------------------------------------------------------
 <# if (EntityItem.IncludeMethod("Create")) { 
-     if (EntityItem.IncludeMethod("Obsolete")) { 
 #>    //---------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// OBSOLETE: Create a new <#=EntityItem.Name#> using the specified ConnectionString.
-    /// </summary>
-    /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-    /// <returns><#=EntityItem.Name#>AppEntity</returns>
-    [Obsolete("This method is slated for retirement. Use Create(SqlConnection).")]
-    public <#=EntityItem.Name#>AppEntity Create(string a_sConnectionString)
-    {
-      <#=EntityItem.Name#>AppEntity xReturnValue = null;
-      m_sConnectionString = a_sConnectionString;
-
-      try
-      {
-        using (SqlConnection xSQLConnection = new SqlConnection(m_sConnectionString))
-        {
-          xReturnValue =  Create(xSQLConnection);
-        }
-      }
-      catch (Exception xException)
-      {
-#if DEBUG
-        if (System.Diagnostics.Debugger.IsAttached)
-        {
-          System.Diagnostics.Debug.WriteLine(xException.ToString());
-          System.Diagnostics.Debugger.Break();
-        }
-#endif
-        throw xException;
-      }
-      finally
-      {
-      }
-
-      return xReturnValue;
-    }
-
-    //---------------------------------------------------------------------------------------------
-<#    } #>
-    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Create a new <#=EntityItem.Name#> using the specified SQLConnection.
@@ -146,8 +105,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 1: Create new <#=EntityItem.Name#>AppEntity -----
           using (SqlCommand xSQLCommand = SQLCommand_Create(xSQLConnection))
           {
-<# if (EntityItem.IncludeMethod("emFDatabaseHelper.Monitor.SQLCommand")) { 
-#>            emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
+#>            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             xSQLCommand.Transaction = xSQLTransaction;
             iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -157,8 +116,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 2: Create AuditLog entry -----
           //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Create))
           //{
-<# if (EntityItem.IncludeMethod("emFDatabaseHelper.Monitor.SQLCommand")) {
-#>            //emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) {
+#>            //DatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
 <# } #>
             //xSQLCommand.Transaction = xSQLTransaction;
             //iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -176,7 +135,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
             {
               using (SqlCommand xSQLCommand = SQLCommand_Create_RoleCapability(xSQLConnection, xCapabilityAppEntity))
               {
-                emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+                DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
                 xSQLCommand.Transaction = xSQLTransaction;
                 iRowAffected = xSQLCommand.ExecuteNonQuery();
               }
@@ -189,7 +148,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
             {
               using (SqlCommand xSQLCommand = SQLCommand_Create_RoleUser(xSQLConnection, xUserAppEntity))
               {
-                emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+                DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
                 xSQLCommand.Transaction = xSQLTransaction;
                 iRowAffected = xSQLCommand.ExecuteNonQuery();
               }
@@ -203,7 +162,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
         }
 
         //----- Read after confirmation -----
-        xReturnValue = Read(xSQLConnection, GUID);
+        xReturnValue = Read(xSQLConnection);
       }
       catch (Exception xException)
       {
@@ -229,49 +188,21 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //---------------------------------------------------------------------------------------------
 <# } #>
 <# if (EntityItem.IncludeMethod("Read")) { 
-     if (EntityItem.IncludeMethod("Obsolete")) { 
 #>    //---------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// OBSOLETE: Read an existing <#=EntityItem.Name#> using the specified ConnectionString and GUID.
+    /// Read an existing <#=EntityItem.Name#> using the specified SQLConnection object's GUID.
     /// </summary>
-    /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-    /// <param name="a_xGUID">The unique identifies of the <#=EntityItem.Name#> to be retrieved.</param>
+    /// <param name="a_xSQLConnection">The database Connection used to perform the action.</param>
     /// <returns><#=EntityItem.Name#>AppEntity</returns>
-    [Obsolete("This method is slated for retirement. Use Read(SqlConnection, GUID).")]
-    public <#=EntityItem.Name#>AppEntity Read(string a_sConnectionString, GUID a_xGUID)
+    public <#=EntityItem.Name#>AppEntity Read(SqlConnection a_xSQLConnection)
     {
-      <#=EntityItem.Name#>AppEntity xReturnValue = null;
-      m_sConnectionString = a_sConnectionString;
-
-      try
-      {
-        using (SqlConnection xSQLConnection = new SqlConnection(m_sConnectionString))
-        {
-          
-          xReturnValue = Read(xSQLConnection, a_xGUID);
-        }
-      }
-      catch (Exception xException)
-      {
-#if DEBUG
-        if (System.Diagnostics.Debugger.IsAttached)
-        {
-          System.Diagnostics.Debug.WriteLine(xException.ToString());
-          System.Diagnostics.Debugger.Break();
-        }
-#endif
-        throw xException;
-      }
-      finally
-      {
-      }
+      <#=EntityItem.Name#>AppEntity xReturnValue = Read(a_xSQLConnection, <#=EntityItem.Name#>GUID);
 
       return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
-<#    } #>
     //---------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -299,8 +230,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 1: Create new <#=EntityItem.Name#>AppEntity -----
           using (SqlCommand xSQLCommand = SQLCommand_Read(xSQLConnection, a_xGUID))
           {
-<# if (EntityItem.IncludeMethod("emFDatabaseHelper.Monitor.SQLCommand")) { 
-#>            emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
+#>            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             xSQLCommand.Transaction = xSQLTransaction;
             using (SqlDataReader xSQLDataReader = xSQLCommand.ExecuteReader())
@@ -336,8 +267,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 2: Create AuditLog entry -----
           //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Read, a_xGUID))
           //{
-<# if (EntityItem.IncludeMethod("emFDatabaseHelper.Monitor.SQLCommand")) { 
-#>            //emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
+#>            //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             //xSQLCommand.Transaction = xSQLTransaction;
             //iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -371,50 +302,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //---------------------------------------------------------------------------------------------
 <# } #>
 <# if (EntityItem.IncludeMethod("Update")) { 
-     if (EntityItem.IncludeMethod("Obsolete")) { 
 #>    //---------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// OBSOLETE: Update this <#=EntityItem.Name#> using the specified ConnectionString.
-    /// </summary>
-    /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-    /// <returns><#=EntityItem.Name#>AppEntity</returns>
-    [Obsolete("This method is slated for retirement. Use Update(SqlConnection).")]
-    public <#=EntityItem.Name#>AppEntity Update(string a_sConnectionString)
-    {
-      <#=EntityItem.Name#>AppEntity xReturnValue = new <#=EntityItem.Name#>AppEntity();
-
-      m_sConnectionString = a_sConnectionString;
-
-      try
-      {
-        using (SqlConnection xSQLConnection = new SqlConnection(m_sConnectionString))
-        {
-         
-      xReturnValue = Update(xSQLConnection);
-        }
-      }
-      catch (Exception xException)
-      {
-#if DEBUG
-        if (System.Diagnostics.Debugger.IsAttached)
-        {
-          System.Diagnostics.Debug.WriteLine(xException.ToString());
-          System.Diagnostics.Debugger.Break();
-        }
-#endif
-      throw xException;
-      }
-      finally
-      {
-      }
-
-      return xReturnValue;
-    }
-
-    //---------------------------------------------------------------------------------------------
-<#    } #>
-    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Update this <#=EntityItem.Name#> using the specified ConnectionString.
@@ -441,8 +329,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 1: Update <#=EntityItem.Name#>AppEntity entry -----
           using (SqlCommand xSQLCommand = SQLCommand_Update(xSQLConnection))
           {
-<# if (EntityItem.IncludeMethod("emFDatabaseHelper.Monitor.SQLCommand")) { 
-#>            emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
+#>            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             xSQLCommand.Transaction = xSQLTransaction;
             iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -452,8 +340,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 2: Create AuditLog entry -----
           //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Update))
           //{
-<# if (EntityItem.IncludeMethod("emFDatabaseHelper.Monitor.SQLCommand")) { 
-#>            //emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
+#>            //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             //xSQLCommand.Transaction = xSQLTransaction;
             //iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -468,7 +356,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
         }
 
         //----- Read after confirmation -----
-        xReturnValue = Read(xSQLConnection, GUID);
+        xReturnValue = Read(xSQLConnection);
       }
       catch (Exception xException)
       {
@@ -492,49 +380,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //---------------------------------------------------------------------------------------------
 <# } #>
 <# if (EntityItem.IncludeMethod("Delete")) { 
-     if (EntityItem.IncludeMethod("Obsolete")) { 
 #>    //---------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// OBSOLETE: Delete this <#=EntityItem.Name#> using the specified ConnectionString.
-    /// </summary>
-    /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-    /// <returns><#=EntityItem.Name#>AppEntity</returns>
-    [Obsolete("This method is slated for retirement. Use Delete(SqlConnection).")]
-    public <#=EntityItem.Name#>AppEntity Delete(string a_sConnectionString)
-    {
-      <#=EntityItem.Name#>AppEntity xReturnValue = null;
-
-      m_sConnectionString = a_sConnectionString;
-     
-      try
-      {
-        using (SqlConnection xSQLConnection = new SqlConnection(m_sConnectionString))
-        {
-          xReturnValue = Delete(xSQLConnection);
-        }
-      }
-      catch (Exception xException)
-      {
-#if DEBUG
-        if (System.Diagnostics.Debugger.IsAttached)
-        {
-          System.Diagnostics.Debug.WriteLine(xException.ToString());
-          System.Diagnostics.Debugger.Break();
-        }
-#endif
-       throw xException;
-      }
-      finally
-      {
-      }
-
-      return xReturnValue;
-    }
-
-    //---------------------------------------------------------------------------------------------
-<#    } #>
-    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Delete this <#=EntityItem.Name#> using the specified SQLConnection.
@@ -564,8 +410,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 1: Delete <#=EntityItem.Name#>AppEntity entry -----
           using (SqlCommand xSQLCommand = SQLCommand_Delete(xSQLConnection))
           {
-<# if (EntityItem.IncludeMethod("emFDatabaseHelper.Monitor.SQLCommand")) { 
-#>            emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
+#>            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             xSQLCommand.Transaction = xSQLTransaction;
             iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -575,8 +421,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 2: Create AuditLog entry -----
           //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Delete))
           //{
-<# if (EntityItem.IncludeMethod("emFDatabaseHelper.Monitor.SQLCommand")) { 
-#>            //emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
+#>            //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             //xSQLCommand.Transaction = xSQLTransaction;
             //iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -591,7 +437,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
         }
 
         //----- Read after confirmation -----
-        xReturnValue = Read(xSQLConnection, GUID);
+        xReturnValue = Read(xSQLConnection);
       }
       catch (Exception xException)
       {
@@ -615,50 +461,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //---------------------------------------------------------------------------------------------
 <# } #>
 <# if (EntityItem.IncludeMethod("Delete")) { 
-     if (EntityItem.IncludeMethod("Obsolete")) { 
 #>    //---------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// OBSOLETE: Delete a <#=EntityItem.Name#> using the specified ConnectionString and GUID.
-    /// </summary>
-    /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-    /// <param name="a_xGUID">The unique identifies of the <#=EntityItem.Name#> to be retrieved.</param>
-    /// <returns><#=EntityItem.Name#>AppEntity</returns>
-    [Obsolete("This method is slated for retirement. Use Delete(SqlConnection, GUID).")]
-    public <#=EntityItem.Name#>AppEntity Delete(string a_sConnectionString, GUID a_xGUID)
-    {
-      <#=EntityItem.Name#>AppEntity xReturnValue = new <#=EntityItem.Name#>AppEntity();
-
-      m_sConnectionString = a_sConnectionString;
-
-      try
-      {
-        using (SqlConnection xSQLConnection = new SqlConnection(m_sConnectionString))
-        {
-          xReturnValue = Delete(xSQLConnection, a_xGUID);
-        }
-      }
-      catch (Exception xException)
-      {
-#if DEBUG
-        if (System.Diagnostics.Debugger.IsAttached)
-        {
-          System.Diagnostics.Debug.WriteLine(xException.ToString());
-          System.Diagnostics.Debugger.Break();
-        }
-#endif
-        throw xException;
-      }
-      finally
-      {
-      }
-
-      return xReturnValue;
-    }
-  
-    //---------------------------------------------------------------------------------------------
-<#  } #>
-    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Delete a <#=EntityItem.Name#> using the specified SQLConnection and GUID.
@@ -686,8 +489,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 1: Delete <#=EntityItem.Name#>AppEntity entry -----
           using (SqlCommand xSQLCommand = SQLCommand_Delete(xSQLConnection, a_xGUID))
           {
-<# if (EntityItem.IncludeMethod("emFDatabaseHelper.Monitor.SQLCommand")) { 
-#>            emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
+#>            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             xSQLCommand.Transaction = xSQLTransaction;
             iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -697,8 +500,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 2: Create AuditLog entry -----
           //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Delete, a_xGUID))
           //{
-<# if (EntityItem.IncludeMethod("emFDatabaseHelper.Monitor.SQLCommand")) { 
-#>            //emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
+#>            //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             //xSQLCommand.Transaction = xSQLTransaction;
             //iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -738,26 +541,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //---------------------------------------------------------------------------------------------
 <# } #>
 <# if (EntityItem.IncludeMethod("Load")) { 
-     if (EntityItem.IncludeMethod("Obsolete")) { 
 #>    //---------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// OBSOLETE: Loads a set of <#=EntityItem.PluralName#> using the specified ConnectionString and DataRequest.
-    /// </summary>
-    /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-    /// <returns><#=EntityItem.Name#>AppEntity</returns>
-    [Obsolete("This method is slated for retirement. Use Load(SqlConnection).")]
-    public IEnumerable<<#=EntityItem.Name#>AppEntity> Load(string a_sConnectionString)
-    {
-      using (SqlConnection xSQLConnection = new SqlConnection(a_sConnectionString))
-      {
-        return Load(xSQLConnection);
-      }
-    }
-
-    //---------------------------------------------------------------------------------------------
-<#    } #>
-    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Loads a set of <#=EntityItem.PluralName#> using the specified ConnectionString and DataRequest.
@@ -773,26 +557,6 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     }
 
     //---------------------------------------------------------------------------------------------
-<#    if (EntityItem.IncludeMethod("Obsolete")) { #>
-    //---------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// OBSOLETE: Loads a set of <#=EntityItem.PluralName#> using the specified ConnectionString and DataRequest.
-    /// </summary>
-    /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-    /// <param name="a_xDataRequest">DataRequest that specifies the set of <#=EntityItem.PluralName#> to be retrieved.</param>
-    /// <returns><#=EntityItem.Name#>AppEntity</returns>
-    [Obsolete("This method is slated for retirement. Use Load(SqlConnection, DataRequest).")]
-    public IEnumerable<<#=EntityItem.Name#>AppEntity> Load(string a_sConnectionString, DataRequest a_xDataRequest)
-    {
-      DataRequest xDataRequest = a_xDataRequest ?? DataRequestFactory();
-      DataResult xDataResult = new DataResult();
-
-      return Load(a_sConnectionString, xDataRequest, out xDataResult);
-    }
-
-    //---------------------------------------------------------------------------------------------
-<#  } #>
     //---------------------------------------------------------------------------------------------
   
     /// <summary>
@@ -810,50 +574,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //---------------------------------------------------------------------------------------------
 <# } #>
 <# if (EntityItem.IncludeMethod("Load")) { 
-     if (EntityItem.IncludeMethod("Obsolete")) { 
 #>    //---------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// OBSOLETE: Loads a set of <#=EntityItem.PluralName#> using the specified ConnectionString and DataRequest.
-    /// </summary>
-    /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-    /// <param name="a_xDataRequest">DataRequest that specifies the set of <#=EntityItem.PluralName#> to be retrieved; including paging information.</param>
-    /// <param name="a_xDataResult">A DataResult containing the TotalCount, FilterCount, PageSize, PageCount, PageNumber, and DatabaseDateTime for the request.</param>
-    /// <returns>IEnumerable<<#=EntityItem.Name#>AppEntity></returns>
-    [Obsolete("This method is slated for retirement. Use Load(SqlConnection, DataRequest, out DataResult).")]
-    public IEnumerable<<#=EntityItem.Name#>AppEntity> Load(string a_sConnectionString, DataRequest a_xDataRequest, out DataResult a_xDataResult)
-    {
-      IEnumerable<<#=EntityItem.Name#>AppEntity> xReturnValue = null;
-      a_xDataResult = null;
-
-      try
-      {
-         using (SqlConnection xSQLConnection = new SqlConnection(a_sConnectionString))
-        {
-          xReturnValue = Load(xSQLConnection, a_xDataRequest, out a_xDataResult);
-        }
-      }
-      catch (Exception xException)
-      {
-#if DEBUG
-        if (System.Diagnostics.Debugger.IsAttached)
-        {
-          System.Diagnostics.Debug.WriteLine(xException.ToString());
-          System.Diagnostics.Debugger.Break();
-        }
-#endif
-        throw xException;
-      }
-      finally
-      {
-      }
-
-      return xReturnValue;
-    }
-
-    //---------------------------------------------------------------------------------------------
-<#    } #>
-    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Loads a set of <#=EntityItem.PluralName#> using the specified Connection and DataRequest.
@@ -878,8 +599,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
         using (SqlCommand xSQLCommand = SQLCommand_Load(xSQLConnection, a_xDataRequest))
         {
-<# if (EntityItem.IncludeMethod("emFDatabaseHelper.Monitor.SQLCommand")) { 
-#>          emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
+#>          DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
           using (SqlDataReader xSQLDataReader = xSQLCommand.ExecuteReader())
           {
@@ -974,7 +695,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           System.Diagnostics.Debugger.Break();
         }
 #endif
-        emFramework.Logger.EventLog.WriteException(Global.SystemName, Global.ApplicationName, Global.App.Tier, xException);
+        emFramework.Logger.EventLog.WriteException(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xException);
       }
 
       return xReturnValue;
@@ -991,7 +712,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
         using (SqlCommand xSQLCommand = SQLCommand_Load_ByRoleGUID(xSQLConnection, a_xUserGUID))
         {
           CapabilityAppEntity xCapablityEntity = null;
-          //emFDatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
+          //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
           using (SqlDataReader xSQLDataReader = xSQLCommand.ExecuteReader())
           {
 
@@ -1015,7 +736,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           System.Diagnostics.Debugger.Break();
         }
 #endif
-        emFramework.Logger.EventLog.WriteException(Global.SystemName, Global.ApplicationName, Global.App.Tier, xException);
+        emFramework.Logger.EventLog.WriteException(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xException);
       }
 
       return xReturnValue;
@@ -1061,7 +782,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           System.Diagnostics.Debugger.Break();
         }
 #endif
-        emFramework.Logger.EventLog.WriteException(Global.SystemName, Global.ApplicationName, Global.App.Tier, xException);
+        emFramework.Logger.EventLog.WriteException(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xException);
       }
 
       return xReturnValue;
@@ -1104,7 +825,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           System.Diagnostics.Debugger.Break();
         }
 #endif
-        emFramework.Logger.EventLog.WriteException(Global.SystemName, Global.ApplicationName, Global.App.Tier, xException);
+        emFramework.Logger.EventLog.WriteException(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xException);
       }
 
       return xReturnValue;
@@ -1113,40 +834,13 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
 
 
-<# if (EntityItem.IncludeMethod("Obsolete")) { #>
-    //---------------------------------------------------------------------------------------------
-
-    private string m_sConnectionString = null;
-
-    //---------------------------------------------------------------------------------------------
-<# } #>
     //---------------------------------------------------------------------------------------------
 
     public static partial class Helper
     {
       //=======================================================================
 <# if (EntityItem.IncludeMethod("Read")) { 
-     if (EntityItem.IncludeMethod("Obsolete")) { 
 #>      //=======================================================================
-
-      /// <summary>
-      /// OBSOLETE: Read an existing <#=EntityItem.Name#> using the specified ConnectionString and GUID.
-      /// </summary>
-      /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-      /// <param name="a_xGUID">The unique identifies of the <#=EntityItem.Name#> to be retrieved.</param>
-      /// <returns><#=EntityItem.Name#>AppEntity</returns>
-      [Obsolete("This method is slated for retirement. Use Read(SqlConnection, GUID).")]
-      public static <#=EntityItem.Name#>AppEntity Read(string a_sConnectionString, GUID a_xGUID)
-      {
-        if (m_x<#=EntityItem.Name#>AppEntity == null)
-          m_x<#=EntityItem.Name#>AppEntity = new <#=EntityItem.Name#>AppEntity();
-
-        return m_x<#=EntityItem.Name#>AppEntity.Read(a_sConnectionString, a_xGUID);
-      }
-
-      //=======================================================================
-<#   } #>
-      //=======================================================================
 
       /// <summary>
       /// Read an existing <#=EntityItem.Name#> using the specified SQLConnection and GUID.
@@ -1165,26 +859,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       //=======================================================================
 <# } #>
 <# if (EntityItem.IncludeMethod("Update")) { 
-     if (EntityItem.IncludeMethod("Obsolete")) { 
 #>      //=======================================================================
-
-      /// <summary>
-      /// OBSOLETE: Update this <#=EntityItem.Name#> using the specified ConnectionString.
-      /// </summary>
-      /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-      /// <returns><#=EntityItem.Name#>AppEntity</returns>
-      [Obsolete("This method is slated for retirement. Use Update(SqlConnection).")]
-      public static <#=EntityItem.Name#>AppEntity Update(string a_sConnectionString)
-      {
-        if (m_x<#=EntityItem.Name#>AppEntity == null)
-          m_x<#=EntityItem.Name#>AppEntity = new <#=EntityItem.Name#>AppEntity();
-
-        return m_x<#=EntityItem.Name#>AppEntity.Update(a_sConnectionString);
-      }
-
-      //=======================================================================
-<#    } #>
-      //=======================================================================
 
       /// <summary>
       /// Update this <#=EntityItem.Name#> using the specified SQLConnection.
@@ -1202,27 +877,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       //=======================================================================
 <# } #>
 <# if (EntityItem.IncludeMethod("Delete")) { 
-     if (EntityItem.IncludeMethod("Obsolete")) { 
 #>      //=======================================================================
-
-      /// <summary>
-      /// OBSOLETE: Delete a <#=EntityItem.Name#> using the specified ConnectionString and GUID.
-      /// </summary>
-      /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-      /// <param name="a_xGUID">The unique identifies of the <#=EntityItem.Name#> to be retrieved.</param>
-      /// <returns><#=EntityItem.Name#>AppEntity</returns>
-      [Obsolete("This method is slated for retirement. Use Delete(SqlConnection, GUID).")]
-      public static <#=EntityItem.Name#>AppEntity Delete(string a_sConnectionString, GUID a_xGUID)
-      {
-        if (m_x<#=EntityItem.Name#>AppEntity == null)
-          m_x<#=EntityItem.Name#>AppEntity = new <#=EntityItem.Name#>AppEntity();
-
-        return m_x<#=EntityItem.Name#>AppEntity.Delete(a_sConnectionString, a_xGUID);
-      }
-
-      //=======================================================================
-<#    } #>
-      //=======================================================================
 
       /// <summary>
       /// Delete a <#=EntityItem.Name#> using the specified SQLConnection and GUID.
@@ -1241,27 +896,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       //=======================================================================
 <# } #>
 <# if (EntityItem.IncludeMethod("Load")) { 
-     if (EntityItem.IncludeMethod("Obsolete")) { 
 #>      //=======================================================================
-
-      /// <summary>
-      /// OBSOLETE: Loads a set of <#=EntityItem.PluralName#> using the specified ConnectionString and DataRequest.
-      /// </summary>
-      /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-      /// <param name="a_xDataRequest">DataRequest that specifies the set of <#=EntityItem.PluralName#> to be retrieved.</param>
-      /// <returns><#=EntityItem.Name#>AppEntity</returns>
-      [Obsolete("This method is slated for retirement. Use Load(SqlConnection, DataRequest).")]
-      public static IEnumerable<<#=EntityItem.Name#>AppEntity> Load(string a_sConnectionString, DataRequest a_xDataRequest)
-      {
-        if (m_x<#=EntityItem.Name#>AppEntity == null)
-          m_x<#=EntityItem.Name#>AppEntity = new <#=EntityItem.Name#>AppEntity();
-
-        return m_x<#=EntityItem.Name#>AppEntity.Load(a_sConnectionString, a_xDataRequest);
-      }
-
-      //=======================================================================
-<#    } #>
-      //=======================================================================
 
       /// <summary>
       /// Loads a set of <#=EntityItem.PluralName#> using the specified SQLConnection and DataRequest.
@@ -1281,28 +916,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       //=======================================================================
 <# } #>
 <# if (EntityItem.IncludeMethod("Load")) { 
-     if (EntityItem.IncludeMethod("Obsolete")) { 
 #>      //=======================================================================
-
-      /// <summary>
-      /// OBSOLETE: Loads a set of <#=EntityItem.PluralName#> using the specified ConnectionString and DataRequest.
-      /// </summary>
-      /// <param name="a_sConnectionString">The database ConnectionString used to perform the action.</param>
-      /// <param name="a_xDataRequest">DataRequest that specifies the set of <#=EntityItem.PluralName#> to be retrieved; including paging information.</param>
-      /// <param name="a_xDataResult">A DataResult containing the TotalCount, FilterCount, PageSize, PageCount, PageNumber, and DatabaseDateTime for the request.</param>
-      /// <returns>IEnumerable<<#=EntityItem.Name#>AppEntity></returns>
-      [Obsolete("This method is slated for retirement. Use Load(SqlConnection, DataRequest, out DataResult).")]
-      public static IEnumerable<<#=EntityItem.Name#>AppEntity> Load(string a_sConnectionString, DataRequest a_xDataRequest, out DataResult a_xDataResult)
-      {
-        if (m_x<#=EntityItem.Name#>AppEntity == null)
-          m_x<#=EntityItem.Name#>AppEntity = new <#=EntityItem.Name#>AppEntity();
-
-        return m_x<#=EntityItem.Name#>AppEntity.Load(a_sConnectionString, a_xDataRequest, out a_xDataResult);
-      }
-
-      //=======================================================================
-<#    } #>
-      //=======================================================================
 
       /// <summary>
       /// Loads a set of <#=EntityItem.PluralName#> using the specified SQLConnection and DataRequest.
@@ -1384,9 +998,9 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
-    public <#=EntityItem.Name#>AppEntity(UserInfo a_xUserInfo)
+    public <#=EntityItem.Name#>AppEntity(IUserInfo a_xUserInfo)
     {
-      UserInfo = a_xUserInfo;
+      IUserInfo = a_xUserInfo;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -1416,14 +1030,6 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
   }
 #>
     //-----
-    //---------------------------------------------------------------------------------------------
-    //---------------------------------------------------------------------------------------------
-
-    public string CodeGenMarker { get { return emFramework.CodeGen.Core.emT4.emT4GUID; } }
-    //NOTE: This code is used to ensure compiler binding to the emFramework.CodeGen.Core.dll so
-    //      that the .dll file is placed in the /bin/debug folder during compile. It may also be
-    //      used to confirm that the property CodeGen assembly is used.
-
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
