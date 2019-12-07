@@ -10,6 +10,7 @@
   <DictionaryEntry Key="ClassNamespace" Value="CodeGenSample.App.Entity" />
 
   <Usings>
+    <Using Name="CodeGenSample.AppTier" />
     <Using Name="CodeGenSample.Design.App" />
     <Using Name="emFrameworkCore.Core" />
     <Using Name="emFrameworkCore.Data" />

@@ -13,6 +13,7 @@
 // CodeGenFilename:  (CodeGen).xml
 // TemplateFilename: (Entity).tt
 
+using CodeGenSample.AppTier;
 using CodeGenSample.Design.App;
 using emFrameworkCore.Core;
 using emFrameworkCore.Data;
@@ -24,7 +25,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 
-using System.Linq;
 
 namespace CodeGenSample.App.Entity
 {
@@ -35,6 +35,24 @@ namespace CodeGenSample.App.Entity
     //---------------------------------------------------------------------------------------------
 
     public enum CRUDAction { Create, Read, Update, Delete, Load }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+
+    public IUserInfo UserInfo
+    {
+      get
+      {
+        if (m_xAppUserInfo == null)
+          m_xAppUserInfo = new AppUserInfo();
+        return m_xAppUserInfo;
+      }
+      set
+      {
+        m_xAppUserInfo = (AppUserInfo)value;
+      }
+    }
+    private AppUserInfo m_xAppUserInfo;
 
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
@@ -85,15 +103,6 @@ namespace CodeGenSample.App.Entity
             iRowAffected = xSQLCommand.ExecuteNonQuery();
           }
 
-          //----- Step 2: Create AuditLog entry -----
-          //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Create))
-          //{
-            //DatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
-            //xSQLCommand.Transaction = xSQLTransaction;
-            //iRowAffected = xSQLCommand.ExecuteNonQuery();
-          //}
-
-			
           //----- Commit Transaction -----
           xSQLTransaction.Commit();
         }
@@ -117,7 +126,6 @@ namespace CodeGenSample.App.Entity
       {
         xSQLConnection.Close();
       }
-
 
       return xReturnValue;
     }
@@ -179,14 +187,6 @@ namespace CodeGenSample.App.Entity
               }
             }
           }
-
-          //----- Step 2: Create AuditLog entry -----
-          //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Read, a_xGUID))
-          //{
-            //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
-            //xSQLCommand.Transaction = xSQLTransaction;
-            //iRowAffected = xSQLCommand.ExecuteNonQuery();
-          //}
         }
       }
       catch (Exception xException)
@@ -241,14 +241,6 @@ namespace CodeGenSample.App.Entity
             xSQLCommand.Transaction = xSQLTransaction;
             iRowAffected = xSQLCommand.ExecuteNonQuery();
           }
-
-          //----- Step 2: Create AuditLog entry -----
-          //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Update))
-          //{
-            //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
-            //xSQLCommand.Transaction = xSQLTransaction;
-            //iRowAffected = xSQLCommand.ExecuteNonQuery();
-          //}
 
           //----- Commit Transaction -----
           xSQLTransaction.Commit();
@@ -312,14 +304,6 @@ namespace CodeGenSample.App.Entity
             iRowAffected = xSQLCommand.ExecuteNonQuery();
           }
 
-          //----- Step 2: Create AuditLog entry -----
-          //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Delete))
-          //{
-            //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
-            //xSQLCommand.Transaction = xSQLTransaction;
-            //iRowAffected = xSQLCommand.ExecuteNonQuery();
-          //}
-
           //----- Commit Transaction -----
           xSQLTransaction.Commit();
         }
@@ -380,21 +364,12 @@ namespace CodeGenSample.App.Entity
             iRowAffected = xSQLCommand.ExecuteNonQuery();
           }
 
-          //----- Step 2: Create AuditLog entry -----
-          //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Delete, a_xGUID))
-          //{
-            //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
-            //xSQLCommand.Transaction = xSQLTransaction;
-            //iRowAffected = xSQLCommand.ExecuteNonQuery();
-          //}
-
           //----- Commit Transaction -----
           xSQLTransaction.Commit();
         }
 
         //----- Read after confirmation -----
         xReturnValue = Read(xSQLConnection, a_xGUID);
-        
       }
       catch (Exception xException)
       {
@@ -539,11 +514,6 @@ namespace CodeGenSample.App.Entity
     }
 
     //---------------------------------------------------------------------------------------------
-
-  
-		
-
-
     //---------------------------------------------------------------------------------------------
 
     public static partial class Helper
@@ -605,6 +575,22 @@ namespace CodeGenSample.App.Entity
       /// Loads a set of AutomobileParts using the specified SQLConnection and DataRequest.
       /// </summary>
       /// <param name="a_xSQLConnection">The database SQLConnection used to perform the action.</param>
+      /// <returns>AutomobilePartAppEntity</returns>
+      public static IEnumerable<AutomobilePartAppEntity> Load(SqlConnection a_xSQLConnection)
+      {
+        if (m_xAutomobilePartAppEntity == null)
+          m_xAutomobilePartAppEntity = new AutomobilePartAppEntity();
+
+        return m_xAutomobilePartAppEntity.Load(a_xSQLConnection);
+      }
+
+      //=======================================================================
+      //=======================================================================
+
+      /// <summary>
+      /// Loads a set of AutomobileParts using the specified SQLConnection and DataRequest.
+      /// </summary>
+      /// <param name="a_xSQLConnection">The database SQLConnection used to perform the action.</param>
       /// <param name="a_xDataRequest">DataRequest that specifies the set of AutomobileParts to be retrieved.</param>
       /// <returns>AutomobilePartAppEntity</returns>
       public static IEnumerable<AutomobilePartAppEntity> Load(SqlConnection a_xSQLConnection, DataRequest a_xDataRequest)
@@ -614,7 +600,6 @@ namespace CodeGenSample.App.Entity
 
         return m_xAutomobilePartAppEntity.Load(a_xSQLConnection, a_xDataRequest);
       }
-
 
       //=======================================================================
       //=======================================================================
@@ -651,12 +636,7 @@ namespace CodeGenSample.App.Entity
       }
 
       //=======================================================================
-      //=======================================================================
-
-
-	  
-				//=======================================================================
-		//=======================================================================
+		  //=======================================================================
 
       private static AutomobilePartAppEntity m_xAutomobilePartAppEntity = null;
 
@@ -676,7 +656,7 @@ namespace CodeGenSample.App.Entity
 
     public AutomobilePartAppEntity(IUserInfo a_xUserInfo)
     {
-      IUserInfo = a_xUserInfo;
+      UserInfo = a_xUserInfo;
     }
 
     //---------------------------------------------------------------------------------------------

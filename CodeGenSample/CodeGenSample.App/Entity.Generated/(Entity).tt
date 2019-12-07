@@ -48,7 +48,6 @@
 // TemplateFilename: <#=Path.GetFileName(xEnvironmentInformation.TemplateFilename)#>
 
 <#=emT4.UsingBlock()#>
-using System.Linq;
 
 namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 {
@@ -59,6 +58,24 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //---------------------------------------------------------------------------------------------
 
     public enum CRUDAction { Create, Read, Update, Delete, Load }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+
+    public IUserInfo UserInfo
+    {
+      get
+      {
+        if (m_xAppUserInfo == null)
+          m_xAppUserInfo = new AppUserInfo();
+        return m_xAppUserInfo;
+      }
+      set
+      {
+        m_xAppUserInfo = (AppUserInfo)value;
+      }
+    }
+    private AppUserInfo m_xAppUserInfo;
 
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
@@ -112,51 +129,6 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
             iRowAffected = xSQLCommand.ExecuteNonQuery();
           }
 
-<# if (EntityItem.IncludeMethod("SQLCommand_AuditLog")) { #>
-          //----- Step 2: Create AuditLog entry -----
-          //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Create))
-          //{
-<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) {
-#>            //DatabaseHelper.Monitor.SQLCommand(Global.SystemName, Global.ApplicationName, Global.App.Tier, xSQLCommand);
-<# } #>
-            //xSQLCommand.Transaction = xSQLTransaction;
-            //iRowAffected = xSQLCommand.ExecuteNonQuery();
-          //}
-<# } else { #>
-          //----- Step 2: Create AuditLog entry (Excluded) (Excluded) -----
-          //----- The "SQLCommand_AuditLog" method was explicitly excluded from class generation.
-<# } #>
-
-			<# if (EntityItem.Name == "Role") {
-			#> 
-			if (Capabilities != null && Capabilities.Count > 0)
-          {
-            foreach (CapabilityAppEntity xCapabilityAppEntity in Capabilities)
-            {
-              using (SqlCommand xSQLCommand = SQLCommand_Create_RoleCapability(xSQLConnection, xCapabilityAppEntity))
-              {
-                DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
-                xSQLCommand.Transaction = xSQLTransaction;
-                iRowAffected = xSQLCommand.ExecuteNonQuery();
-              }
-            }
-          }
-
-          if (Users != null && Users.Count > 0)
-          {
-            foreach (UserAppEntity xUserAppEntity in Users)
-            {
-              using (SqlCommand xSQLCommand = SQLCommand_Create_RoleUser(xSQLConnection, xUserAppEntity))
-              {
-                DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
-                xSQLCommand.Transaction = xSQLTransaction;
-                iRowAffected = xSQLCommand.ExecuteNonQuery();
-              }
-            }
-          }
-
-			<# } #>
-
           //----- Commit Transaction -----
           xSQLTransaction.Commit();
         }
@@ -180,7 +152,6 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       {
         xSQLConnection.Close();
       }
-
 
       return xReturnValue;
     }
@@ -254,29 +225,12 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
                   if (xList_Users != null)
                     xReturnValue.Users = xList_Users.ToList();
                 }
-
-
 			<#	} #>
 
                 iRowAffected++;
               }
             }
           }
-
-<# if (EntityItem.IncludeMethod("SQLCommand_AuditLog")) { #>
-          //----- Step 2: Create AuditLog entry -----
-          //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Read, a_xGUID))
-          //{
-<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
-#>            //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
-<# } #>
-            //xSQLCommand.Transaction = xSQLTransaction;
-            //iRowAffected = xSQLCommand.ExecuteNonQuery();
-          //}
-<# } else { #>
-          //----- Step 2: Create AuditLog entry (Excluded) -----
-          //----- The "SQLCommand_AuditLog" method was explicitly excluded from class generation.
-<# } #>
         }
       }
       catch (Exception xException)
@@ -335,21 +289,6 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
             xSQLCommand.Transaction = xSQLTransaction;
             iRowAffected = xSQLCommand.ExecuteNonQuery();
           }
-
-<# if (EntityItem.IncludeMethod("SQLCommand_AuditLog")) { #>
-          //----- Step 2: Create AuditLog entry -----
-          //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Update))
-          //{
-<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
-#>            //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
-<# } #>
-            //xSQLCommand.Transaction = xSQLTransaction;
-            //iRowAffected = xSQLCommand.ExecuteNonQuery();
-          //}
-<# } else { #>
-          //----- Step 2: Create AuditLog entry (Excluded) -----
-          //----- The "SQLCommand_AuditLog" method was explicitly excluded from class generation.
-<# } #>
 
           //----- Commit Transaction -----
           xSQLTransaction.Commit();
@@ -417,21 +356,6 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
             iRowAffected = xSQLCommand.ExecuteNonQuery();
           }
 
-<# if (EntityItem.IncludeMethod("SQLCommand_AuditLog")) { #>
-          //----- Step 2: Create AuditLog entry -----
-          //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Delete))
-          //{
-<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
-#>            //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
-<# } #>
-            //xSQLCommand.Transaction = xSQLTransaction;
-            //iRowAffected = xSQLCommand.ExecuteNonQuery();
-          //}
-<# } else { #>
-          //----- Step 2: Create AuditLog entry (Excluded) -----
-          //----- The "SQLCommand_AuditLog" method was explicitly excluded from class generation.
-<# } #>
-
           //----- Commit Transaction -----
           xSQLTransaction.Commit();
         }
@@ -496,28 +420,12 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
             iRowAffected = xSQLCommand.ExecuteNonQuery();
           }
 
-<# if (EntityItem.IncludeMethod("SQLCommand_AuditLog")) { #>
-          //----- Step 2: Create AuditLog entry -----
-          //using (SqlCommand xSQLCommand = SQLCommand_AuditLog(xSQLConnection, CRUDAction.Delete, a_xGUID))
-          //{
-<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
-#>            //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
-<# } #>
-            //xSQLCommand.Transaction = xSQLTransaction;
-            //iRowAffected = xSQLCommand.ExecuteNonQuery();
-          //}
-<# } else { #>
-          //----- Step 2: Create AuditLog entry (Excluded) -----
-          //----- The "SQLCommand_AuditLog" method was explicitly excluded from class generation.
-<# } #>
-
           //----- Commit Transaction -----
           xSQLTransaction.Commit();
         }
 
         //----- Read after confirmation -----
         xReturnValue = Read(xSQLConnection, a_xGUID);
-        
       }
       catch (Exception xException)
       {
@@ -572,9 +480,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     }
 
     //---------------------------------------------------------------------------------------------
-<# } #>
-<# if (EntityItem.IncludeMethod("Load")) { 
-#>    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Loads a set of <#=EntityItem.PluralName#> using the specified Connection and DataRequest.
@@ -671,169 +577,6 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-
-  <# if (EntityItem.Name == "Capability") {
-			#> 
-
-			 public List<CapabilityAppEntity> Load_ByRoleGUID(string a_sConnectionString, GUID a_xUserGUID)
-    {
-      List<CapabilityAppEntity> xReturnValue = new List<CapabilityAppEntity>();
-      m_sConnectionString = a_sConnectionString;
-      try
-      {
-        using (SqlConnection xSQLConnection = new SqlConnection(m_sConnectionString))
-        {
-          xReturnValue = Load_ByRoleGUID(xSQLConnection, a_xUserGUID);
-        }
-      }
-      catch (Exception xException)
-      {
-#if DEBUG
-        if (System.Diagnostics.Debugger.IsAttached)
-        {
-          System.Diagnostics.Debug.WriteLine(xException.ToString());
-          System.Diagnostics.Debugger.Break();
-        }
-#endif
-        emFramework.Logger.EventLog.WriteException(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xException);
-      }
-
-      return xReturnValue;
-    }
-
-    public List<CapabilityAppEntity> Load_ByRoleGUID(SqlConnection a_xSqlConnection, GUID a_xUserGUID)
-    {
-      List<CapabilityAppEntity> xReturnValue = new List<CapabilityAppEntity>();
-      try
-      {
-        SqlConnection xSQLConnection = a_xSqlConnection;
-        if(xSQLConnection.State == System.Data.ConnectionState.Closed)
-        xSQLConnection.Open();
-        using (SqlCommand xSQLCommand = SQLCommand_Load_ByRoleGUID(xSQLConnection, a_xUserGUID))
-        {
-          CapabilityAppEntity xCapablityEntity = null;
-          //DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
-          using (SqlDataReader xSQLDataReader = xSQLCommand.ExecuteReader())
-          {
-
-            while (xSQLDataReader.Read())
-            {
-              xCapablityEntity = Import(xSQLDataReader);
-              xReturnValue.Add(xCapablityEntity);
-            }
-
-            if (xReturnValue.Count == 0)
-              xReturnValue = null;
-          }
-        }
-      }
-      catch (Exception xException)
-      {
-#if DEBUG
-        if (System.Diagnostics.Debugger.IsAttached)
-        {
-          System.Diagnostics.Debug.WriteLine(xException.ToString());
-          System.Diagnostics.Debugger.Break();
-        }
-#endif
-        emFramework.Logger.EventLog.WriteException(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xException);
-      }
-
-      return xReturnValue;
-    }
-
-		<#	} #>
-
-		<# if (EntityItem.Name == "User") {
-			#>
-			 public List<UserAppEntity> Load_ByRoleGUID(string a_sConnectionString, GUID a_xUserGUID)
-    {
-      List<UserAppEntity> xReturnValue = new List<UserAppEntity>();
-      m_sConnectionString = a_sConnectionString;
-      try
-      {
-        using (SqlConnection xSQLConnection = new SqlConnection(m_sConnectionString))
-        {
-          xSQLConnection.Open();
-          using (SqlCommand xSQLCommand = SQLCommand_Load_ByRoleGUID(xSQLConnection, a_xUserGUID))
-          {
-            UserAppEntity xCapablityEntity = null;
-            using (SqlDataReader xSQLDataReader = xSQLCommand.ExecuteReader())
-            {
-
-              while (xSQLDataReader.Read())
-              {
-                xCapablityEntity = Import(xSQLDataReader);
-                xReturnValue.Add(xCapablityEntity);
-              }
-
-              if (xReturnValue.Count == 0)
-                xReturnValue = null;
-            }
-          }
-        }
-      }
-      catch (Exception xException)
-      {
-#if DEBUG
-        if (System.Diagnostics.Debugger.IsAttached)
-        {
-          System.Diagnostics.Debug.WriteLine(xException.ToString());
-          System.Diagnostics.Debugger.Break();
-        }
-#endif
-        emFramework.Logger.EventLog.WriteException(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xException);
-      }
-
-      return xReturnValue;
-    }
-
-    public List<UserAppEntity> Load_ByRoleGUID(SqlConnection a_xSqlConnection, GUID a_xUserGUID)
-    {
-      List<UserAppEntity> xReturnValue = new List<UserAppEntity>();
-      // m_sConnectionString = a_sConnectionString;
-      try
-      {
-        using (SqlConnection xSQLConnection = a_xSqlConnection)
-        {
-          xSQLConnection.Open();
-          using (SqlCommand xSQLCommand = SQLCommand_Load_ByRoleGUID(xSQLConnection, a_xUserGUID))
-          {
-            UserAppEntity xCapablityEntity = null;
-            using (SqlDataReader xSQLDataReader = xSQLCommand.ExecuteReader())
-            {
-
-              while (xSQLDataReader.Read())
-              {
-                xCapablityEntity = Import(xSQLDataReader);
-                xReturnValue.Add(xCapablityEntity);
-              }
-
-              if (xReturnValue.Count == 0)
-                xReturnValue = null;
-            }
-          }
-        }
-        //a_xSqlConnection.Close();
-      }
-      catch (Exception xException)
-      {
-#if DEBUG
-        if (System.Diagnostics.Debugger.IsAttached)
-        {
-          System.Diagnostics.Debug.WriteLine(xException.ToString());
-          System.Diagnostics.Debugger.Break();
-        }
-#endif
-        emFramework.Logger.EventLog.WriteException(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xException);
-      }
-
-      return xReturnValue;
-    }
-			<# } #>
-
-
-
     //---------------------------------------------------------------------------------------------
 
     public static partial class Helper
@@ -902,6 +645,22 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       /// Loads a set of <#=EntityItem.PluralName#> using the specified SQLConnection and DataRequest.
       /// </summary>
       /// <param name="a_xSQLConnection">The database SQLConnection used to perform the action.</param>
+      /// <returns><#=EntityItem.Name#>AppEntity</returns>
+      public static IEnumerable<<#=EntityItem.Name#>AppEntity> Load(SqlConnection a_xSQLConnection)
+      {
+        if (m_x<#=EntityItem.Name#>AppEntity == null)
+          m_x<#=EntityItem.Name#>AppEntity = new <#=EntityItem.Name#>AppEntity();
+
+        return m_x<#=EntityItem.Name#>AppEntity.Load(a_xSQLConnection);
+      }
+
+      //=======================================================================
+      //=======================================================================
+
+      /// <summary>
+      /// Loads a set of <#=EntityItem.PluralName#> using the specified SQLConnection and DataRequest.
+      /// </summary>
+      /// <param name="a_xSQLConnection">The database SQLConnection used to perform the action.</param>
       /// <param name="a_xDataRequest">DataRequest that specifies the set of <#=EntityItem.PluralName#> to be retrieved.</param>
       /// <returns><#=EntityItem.Name#>AppEntity</returns>
       public static IEnumerable<<#=EntityItem.Name#>AppEntity> Load(SqlConnection a_xSQLConnection, DataRequest a_xDataRequest)
@@ -912,11 +671,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
         return m_x<#=EntityItem.Name#>AppEntity.Load(a_xSQLConnection, a_xDataRequest);
       }
 
-
       //=======================================================================
-<# } #>
-<# if (EntityItem.IncludeMethod("Load")) { 
-#>      //=======================================================================
+      //=======================================================================
 
       /// <summary>
       /// Loads a set of <#=EntityItem.PluralName#> using the specified SQLConnection and DataRequest.
@@ -953,34 +709,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
       //=======================================================================
 <# } #>
-      //=======================================================================
-
-
-	  <# if (EntityItem.Name == "Capability") {
-			#> 
-      public static IEnumerable<CapabilityAppEntity> Load_ByRoleGUID(string a_sConnectionString, GUID a_xGUID)
-      {
-        if (m_xCapabilityAppEntity == null)
-          m_xCapabilityAppEntity = new CapabilityAppEntity();
-
-        return m_xCapabilityAppEntity.Load_ByRoleGUID(a_sConnectionString, a_xGUID);
-      }
-
-		<# } #>
-
-		<# if (EntityItem.Name == "User") {
-			#> 
-      public static IEnumerable<UserAppEntity> Load_ByRoleGUID(string a_sConnectionString, GUID a_xGUID)
-      {
-        if (m_xUserAppEntity == null)
-          m_xUserAppEntity = new UserAppEntity();
-
-        return m_xUserAppEntity.Load_ByRoleGUID(a_sConnectionString, a_xGUID);
-      }
-
-		<# } #>
-		//=======================================================================
-		//=======================================================================
+		  //=======================================================================
 
       private static <#=EntityItem.Name#>AppEntity m_x<#=EntityItem.Name#>AppEntity = null;
 
@@ -1000,7 +729,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     public <#=EntityItem.Name#>AppEntity(IUserInfo a_xUserInfo)
     {
-      IUserInfo = a_xUserInfo;
+      UserInfo = a_xUserInfo;
     }
 
     //---------------------------------------------------------------------------------------------
