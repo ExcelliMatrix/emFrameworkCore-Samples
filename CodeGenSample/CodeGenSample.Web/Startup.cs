@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CodeGenSample.Web.LocalDB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +14,6 @@ namespace CodeGenSample.Web
   {
     public Startup(IConfiguration configuration)
     {
-      LocalDBUtilities.Create("CodeGenSampleDB");
       Configuration = configuration;
     }
 

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeGen>
+
+  <EntityAssembly Path="{{SolutionDir}}CodeGenSample.Design.App\CodeGenReference\CodeGenSample.Design.App.dll" />
+  <FileTier Value="App" />
+  <FileType Value="CSharp" />
+  <OutputFilename Template="{{Name}}{{FileTier}}Entity.generated.cs" />
+
+  <DictionaryEntry Key="" Value="" />
+  <DictionaryEntry Key="ClassNamespace" Value="CodeGenSample.App.Entity" />
+
+  <Usings>
+    <Using Name="System" />
+    <Using Name="emFrameworkCore.Core" />
+  </Usings>
+
+  <Entities>
+    <Entity Name="Automobile"                PluralName="Automobile" />
+    <Entity Name="AutomobilePart"            PluralName="AutomobilePart" />
+  </Entities>
+
+</CodeGen>

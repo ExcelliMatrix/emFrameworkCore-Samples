@@ -8,9 +8,9 @@ namespace CodeGenSample.Design
 {
   public interface IAutomobileEntityDesign
   {
-    public GUID AutomobileGUID { get; set; }
-    public string AutomobileMake { get; set; }
-    public string AutomobileModel { get; set; }
-    public int AutomobileYear { get; set; }
+    GUID AutomobileGUID { get; set; }
+    string AutomobileMake { get; set; }
+    string AutomobileModel { get; set; }
+    int AutomobileYear { get; set; }
   }
 }

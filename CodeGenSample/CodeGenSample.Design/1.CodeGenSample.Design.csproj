@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.0;net461</TargetFrameworks>
+    <AssemblyName>CodeGenSample.Design</AssemblyName>
+    <RootNamespace>CodeGenSample.Design</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="emFrameworkCore.Core" Version="1.19.0" />
+  </ItemGroup>
+
+</Project>

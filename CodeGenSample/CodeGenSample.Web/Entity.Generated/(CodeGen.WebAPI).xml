@@ -1,1 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeGen>
+
+  <EntityAssembly Path="{{SolutionDir}}CodeGenSample.Design.Web\CodeGenReference\CodeGenSample.Design.Web.dll" />
+  <FileTier Value="Web" />
+  <FileType Value="CSharp" />
+  <OutputFilename Template="{{Name}}{{FileTier}}Entity.generated.webapi.cs" />
+
+  <DictionaryEntry Key="" Value="" />
+  <DictionaryEntry Key="ClassNamespace" Value="CodeGenSample.Web.Entity" />
+
+  <Usings>
+    <Using Name="CodeGenSample.Design.Web" />
+    <Using Name="CodeGenSample.WebTier" />
+    <Using Name="emFrameworkCore.Core" />
+    <Using Name="emFrameworkCore.Data" />
+    <Using Name="Newtonsoft.Json" />
+    <Using Name="System" />
+    <Using Name="System.Collections.Generic" />
+    <Using Name="System.Linq" />
+    <Using Name="System.Net.Http" />
+  </Usings>
+
+  <Entities>
+    <Entity Name="Automobile"                PluralName="Automobiles" />
+    <Entity Name="AutomobilePart"            PluralName="AutomobileParts" />
+  </Entities>
+
+</CodeGen>

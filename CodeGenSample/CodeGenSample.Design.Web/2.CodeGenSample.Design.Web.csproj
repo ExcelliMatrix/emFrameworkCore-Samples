@@ -1,0 +1,153 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.0;net461</TargetFrameworks>
+    <AssemblyName>CodeGenSample.Design.Web</AssemblyName>
+    <RootNamespace>CodeGenSample.Design.Web</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="CodeGenReference\CodeGenSample.Design.dll" />
+    <None Remove="CodeGenReference\CodeGenSample.Design.pdb" />
+    <None Remove="CodeGenReference\CodeGenSample.Design.Web.dll" />
+    <None Remove="CodeGenReference\CodeGenSample.Design.Web.pdb" />
+    <None Remove="CodeGenReference\emFrameworkCore.Core.dll" />
+    <None Remove="CodeGenReference\Microsoft.AspNetCore.Http.Abstractions.dll" />
+    <None Remove="CodeGenReference\Microsoft.AspNetCore.Http.Features.dll" />
+    <None Remove="CodeGenReference\Microsoft.AspNetCore.Mvc.Abstractions.dll" />
+    <None Remove="CodeGenReference\Microsoft.AspNetCore.Routing.Abstractions.dll" />
+    <None Remove="CodeGenReference\Microsoft.Bcl.AsyncInterfaces.dll" />
+    <None Remove="CodeGenReference\Microsoft.Extensions.Configuration.Abstractions.dll" />
+    <None Remove="CodeGenReference\Microsoft.Extensions.Configuration.dll" />
+    <None Remove="CodeGenReference\Microsoft.Extensions.Configuration.FileExtensions.dll" />
+    <None Remove="CodeGenReference\Microsoft.Extensions.Configuration.Json.dll" />
+    <None Remove="CodeGenReference\Microsoft.Extensions.FileProviders.Abstractions.dll" />
+    <None Remove="CodeGenReference\Microsoft.Extensions.FileProviders.Physical.dll" />
+    <None Remove="CodeGenReference\Microsoft.Extensions.FileSystemGlobbing.dll" />
+    <None Remove="CodeGenReference\Microsoft.Extensions.Primitives.dll" />
+    <None Remove="CodeGenReference\Microsoft.Net.Http.Headers.dll" />
+    <None Remove="CodeGenReference\Microsoft.Win32.Primitives.dll" />
+    <None Remove="CodeGenReference\netstandard.dll" />
+    <None Remove="CodeGenReference\Newtonsoft.Json.dll" />
+    <None Remove="CodeGenReference\System.AppContext.dll" />
+    <None Remove="CodeGenReference\System.Buffers.dll" />
+    <None Remove="CodeGenReference\System.Collections.Concurrent.dll" />
+    <None Remove="CodeGenReference\System.Collections.dll" />
+    <None Remove="CodeGenReference\System.Collections.NonGeneric.dll" />
+    <None Remove="CodeGenReference\System.Collections.Specialized.dll" />
+    <None Remove="CodeGenReference\System.ComponentModel.Annotations.dll" />
+    <None Remove="CodeGenReference\System.ComponentModel.dll" />
+    <None Remove="CodeGenReference\System.ComponentModel.EventBasedAsync.dll" />
+    <None Remove="CodeGenReference\System.ComponentModel.Primitives.dll" />
+    <None Remove="CodeGenReference\System.ComponentModel.TypeConverter.dll" />
+    <None Remove="CodeGenReference\System.Configuration.ConfigurationManager.dll" />
+    <None Remove="CodeGenReference\System.Console.dll" />
+    <None Remove="CodeGenReference\System.Data.Common.dll" />
+    <None Remove="CodeGenReference\System.Diagnostics.Contracts.dll" />
+    <None Remove="CodeGenReference\System.Diagnostics.Debug.dll" />
+    <None Remove="CodeGenReference\System.Diagnostics.FileVersionInfo.dll" />
+    <None Remove="CodeGenReference\System.Diagnostics.Process.dll" />
+    <None Remove="CodeGenReference\System.Diagnostics.StackTrace.dll" />
+    <None Remove="CodeGenReference\System.Diagnostics.TextWriterTraceListener.dll" />
+    <None Remove="CodeGenReference\System.Diagnostics.Tools.dll" />
+    <None Remove="CodeGenReference\System.Diagnostics.TraceSource.dll" />
+    <None Remove="CodeGenReference\System.Diagnostics.Tracing.dll" />
+    <None Remove="CodeGenReference\System.Drawing.Primitives.dll" />
+    <None Remove="CodeGenReference\System.Dynamic.Runtime.dll" />
+    <None Remove="CodeGenReference\System.Globalization.Calendars.dll" />
+    <None Remove="CodeGenReference\System.Globalization.dll" />
+    <None Remove="CodeGenReference\System.Globalization.Extensions.dll" />
+    <None Remove="CodeGenReference\System.IO.Compression.dll" />
+    <None Remove="CodeGenReference\System.IO.Compression.ZipFile.dll" />
+    <None Remove="CodeGenReference\System.IO.dll" />
+    <None Remove="CodeGenReference\System.IO.FileSystem.dll" />
+    <None Remove="CodeGenReference\System.IO.FileSystem.DriveInfo.dll" />
+    <None Remove="CodeGenReference\System.IO.FileSystem.Primitives.dll" />
+    <None Remove="CodeGenReference\System.IO.FileSystem.Watcher.dll" />
+    <None Remove="CodeGenReference\System.IO.IsolatedStorage.dll" />
+    <None Remove="CodeGenReference\System.IO.MemoryMappedFiles.dll" />
+    <None Remove="CodeGenReference\System.IO.Pipes.dll" />
+    <None Remove="CodeGenReference\System.IO.UnmanagedMemoryStream.dll" />
+    <None Remove="CodeGenReference\System.Linq.dll" />
+    <None Remove="CodeGenReference\System.Linq.Expressions.dll" />
+    <None Remove="CodeGenReference\System.Linq.Parallel.dll" />
+    <None Remove="CodeGenReference\System.Linq.Queryable.dll" />
+    <None Remove="CodeGenReference\System.Memory.dll" />
+    <None Remove="CodeGenReference\System.Net.Http.dll" />
+    <None Remove="CodeGenReference\System.Net.NameResolution.dll" />
+    <None Remove="CodeGenReference\System.Net.NetworkInformation.dll" />
+    <None Remove="CodeGenReference\System.Net.Ping.dll" />
+    <None Remove="CodeGenReference\System.Net.Primitives.dll" />
+    <None Remove="CodeGenReference\System.Net.Requests.dll" />
+    <None Remove="CodeGenReference\System.Net.Security.dll" />
+    <None Remove="CodeGenReference\System.Net.Sockets.dll" />
+    <None Remove="CodeGenReference\System.Net.WebHeaderCollection.dll" />
+    <None Remove="CodeGenReference\System.Net.WebSockets.Client.dll" />
+    <None Remove="CodeGenReference\System.Net.WebSockets.dll" />
+    <None Remove="CodeGenReference\System.Numerics.Vectors.dll" />
+    <None Remove="CodeGenReference\System.ObjectModel.dll" />
+    <None Remove="CodeGenReference\System.Reflection.dll" />
+    <None Remove="CodeGenReference\System.Reflection.Extensions.dll" />
+    <None Remove="CodeGenReference\System.Reflection.Primitives.dll" />
+    <None Remove="CodeGenReference\System.Resources.Reader.dll" />
+    <None Remove="CodeGenReference\System.Resources.ResourceManager.dll" />
+    <None Remove="CodeGenReference\System.Resources.Writer.dll" />
+    <None Remove="CodeGenReference\System.Runtime.CompilerServices.Unsafe.dll" />
+    <None Remove="CodeGenReference\System.Runtime.CompilerServices.VisualC.dll" />
+    <None Remove="CodeGenReference\System.Runtime.dll" />
+    <None Remove="CodeGenReference\System.Runtime.Extensions.dll" />
+    <None Remove="CodeGenReference\System.Runtime.Handles.dll" />
+    <None Remove="CodeGenReference\System.Runtime.InteropServices.dll" />
+    <None Remove="CodeGenReference\System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <None Remove="CodeGenReference\System.Runtime.Numerics.dll" />
+    <None Remove="CodeGenReference\System.Runtime.Serialization.Formatters.dll" />
+    <None Remove="CodeGenReference\System.Runtime.Serialization.Json.dll" />
+    <None Remove="CodeGenReference\System.Runtime.Serialization.Primitives.dll" />
+    <None Remove="CodeGenReference\System.Runtime.Serialization.Xml.dll" />
+    <None Remove="CodeGenReference\System.Security.AccessControl.dll" />
+    <None Remove="CodeGenReference\System.Security.Claims.dll" />
+    <None Remove="CodeGenReference\System.Security.Cryptography.Algorithms.dll" />
+    <None Remove="CodeGenReference\System.Security.Cryptography.Csp.dll" />
+    <None Remove="CodeGenReference\System.Security.Cryptography.Encoding.dll" />
+    <None Remove="CodeGenReference\System.Security.Cryptography.Primitives.dll" />
+    <None Remove="CodeGenReference\System.Security.Cryptography.X509Certificates.dll" />
+    <None Remove="CodeGenReference\System.Security.Permissions.dll" />
+    <None Remove="CodeGenReference\System.Security.Principal.dll" />
+    <None Remove="CodeGenReference\System.Security.Principal.Windows.dll" />
+    <None Remove="CodeGenReference\System.Security.SecureString.dll" />
+    <None Remove="CodeGenReference\System.Text.Encoding.dll" />
+    <None Remove="CodeGenReference\System.Text.Encoding.Extensions.dll" />
+    <None Remove="CodeGenReference\System.Text.Encodings.Web.dll" />
+    <None Remove="CodeGenReference\System.Text.Json.dll" />
+    <None Remove="CodeGenReference\System.Text.RegularExpressions.dll" />
+    <None Remove="CodeGenReference\System.Threading.dll" />
+    <None Remove="CodeGenReference\System.Threading.Overlapped.dll" />
+    <None Remove="CodeGenReference\System.Threading.Tasks.dll" />
+    <None Remove="CodeGenReference\System.Threading.Tasks.Extensions.dll" />
+    <None Remove="CodeGenReference\System.Threading.Tasks.Parallel.dll" />
+    <None Remove="CodeGenReference\System.Threading.Thread.dll" />
+    <None Remove="CodeGenReference\System.Threading.ThreadPool.dll" />
+    <None Remove="CodeGenReference\System.Threading.Timer.dll" />
+    <None Remove="CodeGenReference\System.ValueTuple.dll" />
+    <None Remove="CodeGenReference\System.Xml.ReaderWriter.dll" />
+    <None Remove="CodeGenReference\System.Xml.XDocument.dll" />
+    <None Remove="CodeGenReference\System.Xml.XmlDocument.dll" />
+    <None Remove="CodeGenReference\System.Xml.XmlSerializer.dll" />
+    <None Remove="CodeGenReference\System.Xml.XPath.dll" />
+    <None Remove="CodeGenReference\System.Xml.XPath.XDocument.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="emFrameworkCore.Core" Version="1.19.0" />
+    <PackageReference Include="emFrameworkCore.Data" Version="1.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CodeGenSample.Design\1.CodeGenSample.Design.csproj" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy $(ProjectDir)bin\Debug\net461\*.* $(ProjectDir)CodeGenReference\*.* /Y/V/R&#xD;&#xA;" />
+  </Target>
+
+</Project>

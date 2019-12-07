@@ -1,33 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <CodeGen>
 
-  <EntityAssembly Path="{{SolutionDir}}CodeGenSample.Design.App\bin\Reference\emFramework.UserRoleCapability.dll" />
-  <FileTier Value="App" />
+  <EntityAssembly Path="{{SolutionDir}}CodeGenSample.Design.Web\CodeGenReference\CodeGenSample.Design.Web.dll" />
+  <FileTier Value="Web" />
   <FileType Value="CSharp" />
   <OutputFilename Template="{{Name}}{{FileTier}}Entity.generated.cs" />
 
   <DictionaryEntry Key="" Value="" />
-  <DictionaryEntry Key="ClassNamespace" Value="emFramework.UserRoleCapability.Entity" />
+  <DictionaryEntry Key="ClassNamespace" Value="CodeGenSample.Web.Entity" />
 
   <Usings>
+    <Using Name="CodeGenSample.Design.Web" />
+    <Using Name="CodeGenSample.WebTier" />
+    <Using Name="emFrameworkCore.Core" />
+    <Using Name="emFrameworkCore.Data" />
+    <Using Name="Newtonsoft.Json" />
     <Using Name="System" />
     <Using Name="System.Collections.Generic" />
-    <Using Name="System.Data.SqlClient" />
-    <Using Name="emFramework.Core" />
-    <Using Name="emFramework.Core.Data" />
-    <Using Name="emFramework.Database" />
-    <Using Name="emFramework.Database.Extension" />
-    <Using Name="emFramework.Entity" />
-    <Using Name="emFramework.UserRoleCapability" />
-    <Using Name="emFramework.UserRoleCapability.EntityDesign" />
+    <Using Name="System.Linq" />
   </Usings>
 
   <Entities>
-    <Entity Name="Capability"                PluralName="Capability" />
-    <Entity Name="Role"                      PluralName="Roles" />
-    <Entity Name="User"                      PluralName="Users" />
-    <Entity Name="RoleCapability"            PluralName="RoleCapability" />
-    <Entity Name="UserRole"                  PluralName="UserRoles" />
+    <Entity Name="Automobile"                PluralName="Automobiles" />
+    <Entity Name="AutomobilePart"            PluralName="AutomobileParts" />
   </Entities>
 
 </CodeGen>

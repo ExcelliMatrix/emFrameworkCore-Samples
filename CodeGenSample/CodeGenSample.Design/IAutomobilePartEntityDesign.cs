@@ -8,12 +8,12 @@ namespace CodeGenSample.Design
 {
   public interface IAutomobilePartEntityDesign
   {
-    public GUID AutomobilePartGUID { get; set; }
-    public GUID AutomobileGUID { get; set; }
-    public string AutomobilePartNumber { get; set; }
-    public string AutomobilePartName { get; set; }
-    public string AutomobilePartDescription { get; set; }
-    public decimal AutomobilePartPrice { get; set; }
+    GUID AutomobilePartGUID { get; set; }
+    GUID AutomobileGUID { get; set; }
+    string AutomobilePartNumber { get; set; }
+    string AutomobilePartName { get; set; }
+    string AutomobilePartDescription { get; set; }
+    decimal AutomobilePartPrice { get; set; }
 
   }
 }

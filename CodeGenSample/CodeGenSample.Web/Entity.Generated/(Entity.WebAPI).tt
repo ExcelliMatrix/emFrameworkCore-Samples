@@ -1,5 +1,5 @@
 ﻿<#@ template language="C#" hostspecific="true" debug="True" #>
-<#@ assembly name="$(TargetDir)emFramework.CodeGen.Core.dll" #> 
+<#@ assembly name="$(SolutionDir)(External Libraries)\emFrameworkCore.CodeGen.dll" #> 
 <#@ assembly name="Microsoft.SqlServer.Smo" #>
 <#@ assembly name="Microsoft.SqlServer.ConnectionInfo" #>
 <#@ assembly name="Microsoft.SqlServer.Management.Sdk.Sfc" #>
@@ -8,7 +8,7 @@
 <#@ assembly name="System.Data" #>
 <#@ assembly name="System.Xml" #>
 <#@ import namespace="System" #>
-<#@ import namespace="emFramework.CodeGen.Core" #>
+<#@ import namespace="emFrameworkCore.CodeGen" #>
 <#@ import namespace="Microsoft.SqlServer.Management.Smo" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.IO" #>
@@ -30,16 +30,18 @@
   foreach (emT4.Entity EntityItem in emT4.EntityItems())
   {
     emT4.LogWrite(emT4.OutputFilename(EntityItem));
-    string sTableName = emT4.MetadataDictionary_AttributeProperty(EntityItem.Name + "EntityDesign", "Table", "Name").FirstOrDefault().Value.Value;
+    string sWebResource = emT4.MetadataDictionary_AttributeProperty(EntityItem.Name + "WebEntityDesign", "WebResource", "Name").FirstOrDefault().Value.Value;
 #>
-//**********************************************************************************
-//*                                                                                *
-//* Copyright (c) 2016-<#=DateTime.Now.Year#> ExcelliMatrix, Inc. All Rights Reserved.               *
-//*                                                                                *
-//* This code was generated from an emFramework Template. DO NOT MODIFY THIS FILE. *
-//*                                                       -----------------------  *
-//*                                                                                *
-//**********************************************************************************
+//********************************************************************
+//*                                                                  *
+//* Copyright (c) 2016-<#=DateTime.Now.Year#> ExcelliMatrix, Inc. All Rights Reserved. *
+//*                                                                  *
+//*    This code was generated from an emFrameworkCode Template.     *
+//*                                                                  *
+//*                     DO NOT MODIFY THIS FILE.                     *
+//*                     -----------------------                      *
+//*                                                                  *
+//********************************************************************
 
 // Directory:        <#=xEnvironmentInformation.Directory.Replace(xEnvironmentInformation.GetSolutionDirectory(), "{{SolutionDir}}")#>
 // CodeGenFilename:  <#=xEnvironmentInformation.CodeGenFilename#>
@@ -49,358 +51,122 @@
 
 namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 {
-   public partial class <#=EntityItem.Name#>AppEntity
+   public partial class <#=EntityItem.Name#>WebEntity
    {
     //---------------------------------------------------------------------------------------------
-    //---------------------------------------------------------------------------------------------
-
-    public enum AuditLogTypes { CRUD, Configuration, Security }
-    public enum AuditLogLevels { Informational, Warning, Critical }
-
-    //---------------------------------------------------------------------------------------------
-<# if (EntityItem.IncludeMethod("WebAPICommand_AuditLog")) { 
+<# if (EntityItem.IncludeMethod("WebAPI_Create")) { 
 #>    //---------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Creates the WebAPICommand needed to create a AuditLog entry for the specified CRUDAction.
-    /// </summary>
-    /// <param name="a_xSQLConnection"></param>
-    /// <param name="a_xCRUDAction"></param>
-    /// <returns>SqlCommand</returns>
-    public SqlCommand WebAPICommand_AuditLog(SqlConnection a_xSQLConnection, <#=EntityItem.Name#>AppEntity.CRUDAction a_xCRUDAction)
+    public HttpResponseMessage WebAPI_Create(Uri a_xURI)
     {
-      return WebAPICommand_AuditLog(a_xSQLConnection, a_xCRUDAction, GUID);
-    }
+      HttpResponseMessage xReturnValue = null;
 
-    //---------------------------------------------------------------------------------------------
-    //---------------------------------------------------------------------------------------------
+      HttpClient xHttpClient = new HttpClient();
+      List<KeyValuePair<string, string>> xKeyValuePairs = Export_ToKeyValuePairs();
+      FormUrlEncodedContent formUrlEncodedContent = new FormUrlEncodedContent(xKeyValuePairs);
+      xReturnValue = xHttpClient.PostAsync(a_xURI, formUrlEncodedContent).Result;
 
-    /// <summary>
-    /// Creates the SqlCommand needed to create a AuditLog entry for the specified CRUDAction.
-    /// </summary>
-    /// <param name="a_xSQLConnection"></param>
-    /// <param name="a_xCRUDAction"></param>
-    /// <param name="a_xTableRowGUID"></param>
-    /// <returns>SqlCommand</returns>
-    public SqlCommand WebAPICommand_AuditLog(SqlConnection a_xSQLConnection, <#=EntityItem.Name#>AppEntity.CRUDAction a_xCRUDAction, GUID a_xTableRowGUID)
-    {
-      string sSQLStatement = "";            
-      sSQLStatement =
-      $@"
-        insert into emF_UserAuditLog
-        (
-          ApplicationFunction, 
-          ApplicationName, 
-          CreateDateTime, 
-          CreateHostName, 
-          CreateIPAddress,  
-          CreateUserGUID, 
-          OperationDetail, 
-          OperationGUID, 
-          OperationTableName, 
-          TenantGUID,     
-          UserAuditLogGUID
-        )
-        values
-        (
-          @ApplicationFunction, 
-          @ApplicationName, 
-          @CreateDateTime, 
-          @CreateHostName, 
-          @CreateIPAddress, 
-          @CreateUserGUID, 
-          @OperationDetail, 
-          @OperationGUID, 
-          @OperationTableName, 
-          @TenantGUID, 
-          @UserAuditLogGUID
-        )
-      ";
-
-      AuditLogTypes enumAuditLogType = AuditLogTypes.CRUD;
-      string ApplicationName = Global.ApplicationName;
-      string ApplicationFunction = enumAuditLogType.ToString();
-      string sCRUDAction = a_xCRUDAction.ToString();
-      string OperationTableName = TableName;
-      GUID OperationGUID = a_xTableRowGUID;
-
-      GUID xAuditLogGUID = new GUID();
-
-      UserInfo xUserInfo = UserInfo;
-      if (xUserInfo == null)
-      {
-        xUserInfo = new UserInfo
-        {
-          UserHostName = "",
-          UserIPAddress = "",
-          TenantGUID = GUID.NewGUID("{00000000-0000-0000-0000-000000000000}"),
-          UserGUID = GUID.NewGUID("{00000000-0000-0000-0000-000000000000}")
-        };
-      }
-
-      SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand.Parameters.Add(new SqlParameter("@ApplicationFunction", ApplicationFunction.ToDBNull()));
-      xSQLCommand.Parameters.Add(new SqlParameter("@ApplicationName", ApplicationName.ToDBNull()));
-      xSQLCommand.Parameters.Add(new SqlParameter("@CreateDateTime", System.DateTime.Now));
-      xSQLCommand.Parameters.Add(new SqlParameter("@CreateHostName", xUserInfo.UserHostName.ToDBNull()));
-      xSQLCommand.Parameters.Add(new SqlParameter("@CreateIPAddress", xUserInfo.UserIPAddress.ToDBNull()));
-      xSQLCommand.Parameters.Add(new SqlParameter("@CreateUserGUID", xUserInfo.UserGUID != null ? xUserInfo.UserGUID.ToString().ToDBNull() : System.DBNull.Value));
-      xSQLCommand.Parameters.Add(new SqlParameter("@OperationDetail", System.DBNull.Value));
-      xSQLCommand.Parameters.Add(new SqlParameter("@OperationGUID", OperationGUID != null ? OperationGUID.ToString().ToDBNull() : System.DBNull.Value));
-      xSQLCommand.Parameters.Add(new SqlParameter("@OperationTableName", OperationTableName.ToDBNull()));
-      xSQLCommand.Parameters.Add(new SqlParameter("@TenantGUID", xUserInfo.TenantGUID != null ? xUserInfo.TenantGUID.ToString().ToDBNull() : System.DBNull.Value));
-      xSQLCommand.Parameters.Add(new SqlParameter("@UserAuditLogGUID", xAuditLogGUID.ToString()));
-
-      return xSQLCommand;
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("WebAPICommand_Create")) { 
+<# if (EntityItem.IncludeMethod("WebAPI_Delete")) { 
 #>    //---------------------------------------------------------------------------------------------
 
-    public SqlCommand WebAPICommand_Create(SqlConnection a_xSQLConnection)
+    public HttpResponseMessage WebAPI_Delete(Uri a_xURI)
     {
-      string sSQLStatement = "";
+      HttpResponseMessage xReturnValue = WebAPI_Delete(a_xURI, <#=EntityItem.Name#>GUID);
 
-      sSQLStatement =
-      $@"
-        insert into <#=sTableName#>
-        (
-<#
-  foreach (emT4.MetadataEntry xMetadataEntry in emT4.GetMetadataEntries(EntityItem.DesignName, emT4.EntryTypes.TypeProperty, "Column", "Key"))
-  {
-#>
-          <#=xMetadataEntry.PropertyName#>, 
-<#
-  }
-#>
-          <#=EntityItem.Name#>GUID
-        )
-        values
-        (
-<#
-  foreach (emT4.MetadataEntry xMetadataEntry in emT4.GetMetadataEntries(EntityItem.DesignName, emT4.EntryTypes.TypeProperty, "Column", "Key"))
-  {
-#>
-          @<#=xMetadataEntry.PropertyName#>, 
-<#
-  }
-#>
-          @<#=EntityItem.Name#>GUID
-        )
-      ";
-      if (GUID == null)
-        GUID = new GUID();
+      return xReturnValue;
+    }
 
-      SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-<#
-  foreach (emT4.MetadataEntry xMetadataEntry in emT4.GetMetadataEntries(EntityItem.DesignName, emT4.EntryTypes.TypeProperty, "Column", "Key"))
-  {
- if (xMetadataEntry.PropertyName.Contains("GUID")) { #>
-      xSQLCommand.Parameters.Add(new SqlParameter("@<#=xMetadataEntry.PropertyName#>", <#=xMetadataEntry.PropertyName#> != null ? <#=xMetadataEntry.PropertyName#>.ToString().ToDBNull() : System.DBNull.Value));
-<# 
-  }else{ 
-#>
-      xSQLCommand.Parameters.Add(new SqlParameter("@<#=xMetadataEntry.PropertyName#>", <#=xMetadataEntry.PropertyName#>.ToDBNull()));
-<#
-  }
-  }
-#>
-      xSQLCommand.Parameters.Add(new SqlParameter("@<#=EntityItem.Name#>GUID", GUID.ToString()));
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
 
-      return xSQLCommand;
+    public HttpResponseMessage WebAPI_Delete(Uri a_xURI, GUID a_xGUID)
+    {
+      HttpResponseMessage xReturnValue = null;
+
+      HttpClient xHttpClient = new HttpClient();
+      string sURL = $"{a_xURI}/{a_xGUID}";
+      xReturnValue = xHttpClient.DeleteAsync(sURL).Result;
+
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("WebAPICommand_Delete")) { 
+<# if (EntityItem.IncludeMethod("WebAPI_Load")) { 
 #>    //---------------------------------------------------------------------------------------------
 
-    public SqlCommand WebAPICommand_Delete(SqlConnection a_xSQLConnection)
+    public HttpResponseMessage WebAPI_Load(Uri a_xURI, DataRequest a_xDataRequest)
     {
-      SqlCommand xSQLCommand = WebAPICommand_Delete(a_xSQLConnection, GUID);
+      HttpResponseMessage xReturnValue = null;
 
-      return xSQLCommand;
+      HttpClient xHttpClient = new HttpClient();
+      xReturnValue = xHttpClient.DeleteAsync(a_xURI).Result;
+
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("WebAPICommand_Delete")) { 
+<# if (EntityItem.IncludeMethod("WebAPI_Read")) {
 #>    //---------------------------------------------------------------------------------------------
 
-    public SqlCommand WebAPICommand_Delete(SqlConnection a_xSQLConnection, GUID a_xGUID)
+    public HttpResponseMessage WebAPI_Read(Uri a_xURI)
     {
-      string sSQLStatement = "";
+      HttpResponseMessage xReturnValue = WebAPI_Read(a_xURI, <#=EntityItem.Name#>GUID);
 
-      sSQLStatement =
-        $@"
-          update <#=sTableName#>
-            set
-              <#=EntityItem.Name#>Deleted = 'True'
-            where
-              <#=EntityItem.Name#>GUID = @GUID;
-        ";
-      SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand.Parameters.Add(new SqlParameter("@GUID", a_xGUID.ToString()));
+      return xReturnValue;
+    }
 
-      return xSQLCommand;
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+
+    public HttpResponseMessage WebAPI_Read(Uri a_xURI, GUID a_xGUID)
+    {
+      HttpResponseMessage xReturnValue = null;
+
+      HttpClient xHttpClient = new HttpClient();
+      string sURL = $"{a_xURI}/{a_xGUID}";
+      xReturnValue = xHttpClient.DeleteAsync(sURL).Result;
+
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("WebAPICommand_Load")) { 
+<# if (EntityItem.IncludeMethod("WebAPI_Update")) { 
 #>    //---------------------------------------------------------------------------------------------
 
-    public SqlCommand WebAPICommand_Load(SqlConnection a_xSQLConnection, DataRequest a_xDataRequest)
+    public HttpResponseMessage WebAPI_Update(Uri a_xURI)
     {
-      //----- NOTE: sSQLStatement is "" by default, this instructs the
-      //-----       ApplyDataRequest to use a statement SQLStatement.
-      string sSQLStatement = "";
+      HttpResponseMessage xReturnValue = null;
 
-      SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand = DataRequestExtension.ApplyDataRequest<<#=EntityItem.Name#>EntityDesign>(xSQLCommand, a_xDataRequest);
+      HttpClient xHttpClient = new HttpClient();
+      List<KeyValuePair<string, string>> xKeyValuePairs = Export_ToKeyValuePairs();
+      FormUrlEncodedContent formUrlEncodedContent = new FormUrlEncodedContent(xKeyValuePairs);
+      xReturnValue = xHttpClient.PutAsync(a_xURI, formUrlEncodedContent).Result;
 
-      return xSQLCommand;
-    }
-
-    //---------------------------------------------------------------------------------------------
-<# } #>
-
-<# if (EntityItem.IncludeMethod("WebAPICommand_Read")) {
-#>    //---------------------------------------------------------------------------------------------
-
-    public SqlCommand WebAPICommand_Read(SqlConnection a_xSQLConnection, GUID a_xGUID)
-    {
-      string sSQLStatement = "";
-
-      sSQLStatement =
-      $@"
-        select
-            *
-          from 
-            <#=sTableName#>
-          where
-            <#=EntityItem.Name#>GUID = @GUID
-      ";
-
-      SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand.Parameters.Add(new SqlParameter("GUID", a_xGUID.ToString()));
-
-      return xSQLCommand;
-    }
-
-    //---------------------------------------------------------------------------------------------
-<# } #>
-<# if (EntityItem.IncludeMethod("WebAPICommand_Update")) { 
-#>    //---------------------------------------------------------------------------------------------
-
-    public SqlCommand WebAPICommand_Update(SqlConnection a_xSQLConnection)
-    {
-      string sSQLStatement = "";
-   <# List<emT4.MetadataEntry> xListMetadatEntry = emT4.GetMetadataEntries(EntityItem.DesignName, emT4.EntryTypes.TypeProperty, "Column", "Key"); #>
-
-      sSQLStatement =
-      $@"
-        update <#=sTableName#>
-          set 
-<#
-  foreach (emT4.MetadataEntry xMetadataEntry in xListMetadatEntry)
-  {
-#>
-<#if(xListMetadatEntry.Last().PropertyName != xMetadataEntry.PropertyName ){#>
-            <#=xMetadataEntry.PropertyName.PadRight(40)#> = @<#=xMetadataEntry.PropertyName#>,
-<#}else{#>
-            <#=xMetadataEntry.PropertyName.PadRight(40)#> = @<#=xMetadataEntry.PropertyName#>
-<#}
-  }
-#>
-          where
-            <#=EntityItem.Name#>GUID = @<#=EntityItem.Name#>GUID
-      ";
-
-      SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-<#foreach (emT4.MetadataEntry xMetadataEntry in emT4.GetMetadataEntries(EntityItem.DesignName, emT4.EntryTypes.TypeProperty, "Column", "Key"))
-  {
- if (xMetadataEntry.PropertyName.Contains("GUID")) { #>
-      xSQLCommand.Parameters.Add(new SqlParameter("@<#=xMetadataEntry.PropertyName#>", <#=xMetadataEntry.PropertyName#>.ToString().ToDBNull()));
-<#}else{#>
-      xSQLCommand.Parameters.Add(new SqlParameter("@<#=xMetadataEntry.PropertyName#>", <#=xMetadataEntry.PropertyName#>.ToDBNull()));
-<#
-  }
-  }
-#>
-      xSQLCommand.Parameters.Add(new SqlParameter("@<#=EntityItem.Name#>GUID", GUID.ToString()));
-
-      return xSQLCommand;
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
 <# } #>
     //---------------------------------------------------------------------------------------------
-
-
-	<# if(EntityItem.Name == "Capability"){ #>
-
-	public SqlCommand WebAPICommand_Load_ByRoleGUID(SqlConnection a_xSQLConnection, GUID a_xRoleGUID)
-    {
-      string sSQLStatement = "";
-
-      sSQLStatement = @"select distinct
-                 emF_Capability.CapabilityGUID,
-                 emF_Capability.CapabilityCode,
-                 emF_Capability.CapabilityName,
-                 emF_Capability.CapabilityDescription,
-                 emF_Capability.CapabilityDeleted
-                 from  emF_Capability inner join emF_RoleCapability  on emF_Capability.CapabilityGUID = emF_RoleCapability.CapabilityGUID
-                 where emF_RoleCapability.RoleGUID = @RoleGUID and emF_RoleCapability.RoleCapabilityDeleted = 'False' and
-                 emF_Capability.CapabilityDeleted = 'False'  ";
-
-      SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand.Parameters.Add(new SqlParameter("RoleGUID", a_xRoleGUID.GUIDString));
-
-      return xSQLCommand;
-    }
-
-<#	} #>
-
-
-	<# if(EntityItem.Name == "User"){ #>
-
-	 public SqlCommand WebAPICommand_Load_ByRoleGUID(SqlConnection a_xSQLConnection, GUID a_xRoleGUID)
-    {
-      string sSQLStatement = "";
-
-      sSQLStatement = @"select distinct
-                            emF_User.UserGUID,
-                            emF_User.UserUsername,
-                            emF_User.UserFirstName,
-                            emF_User.UserMiddleName,
-                            emF_User.UserLastName
-                            from  emF_User inner join emF_UserRole  on emF_User.UserGUID = emF_UserRole.UserGUID
-                            where emF_UserRole.RoleGUID = @RoleGUID and emF_UserRole.UserRoleDeleted = 'False' and
-                            emF_User.UserDeleted = 'False'  ";
-
-      SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand.Parameters.Add(new SqlParameter("RoleGUID", a_xRoleGUID.GUIDString));
-
-      return xSQLCommand;
-    }
-
-<#	} #>
-
-
     //---------------------------------------------------------------------------------------------
     //-----
-    //----- Metadata available for "<#=emT4.FormatEntity(EntityItem.DesignName)#>"
+    //----- Metadata available for "<#=emT4.FormatEntity(EntityItem.DesignTierName)#>"
     //-----
 <#
-  foreach (string sKey in emT4.MetadataDictionary(EntityItem.DesignName).Keys)
+  foreach (string sKey in emT4.MetadataDictionary(EntityItem.DesignTierName).Keys)
   {
     if (emT4.MetadataDictionary()[sKey].EntryType == emT4.EntryTypes.TypeProperty)
     {
 #>
-    //----- <#=emT4.MetadataDictionary()[sKey].PropertyName.PadRight(40)#>  Key = "<#=sKey#>"
+    //----- <#=emT4.MetadataDictionary()[sKey].PropertyName.PadRight(40)#> Key = "<#=sKey#>"
 <#
     }
   }
@@ -408,22 +174,14 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //-----
     //-----
 <#
-  foreach (string sKey in emT4.MetadataDictionary(EntityItem.DesignName).Keys)
+  foreach (string sKey in emT4.MetadataDictionary(EntityItem.DesignTierName).Keys)
   {
 #>
-    //----- <#=("(" + emT4.MetadataDictionary()[sKey].EntryType + ")").PadRight(32)#> <#=sKey#> == "<#=emT4.MetadataDictionary()[sKey].Value??"null"#>"
+    //----- <#=("(" + emT4.MetadataDictionary()[sKey].EntryType + ")").PadRight(40)#> <#=sKey#> == "<#=emT4.MetadataDictionary()[sKey].Value??"null"#>"
 <#
   }
 #>
     //-----
-    //---------------------------------------------------------------------------------------------
-    //---------------------------------------------------------------------------------------------
-
-    public string CodeGenMarker_SQL { get { return emFramework.CodeGen.Core.emT4.emT4GUID; } }
-    //NOTE: This code is used to ensure compiler binding to the emFramework.CodeGen.Core.dll so
-    //      that the .dll file is placed in the /bin/debug folder during compile. It may also be
-    //      used to confirm that the property CodeGen assembly is used.
-
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
   }

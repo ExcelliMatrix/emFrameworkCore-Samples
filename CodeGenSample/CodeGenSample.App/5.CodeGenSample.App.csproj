@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <AssemblyName>CodeGenSample.AppTier</AssemblyName>
+    <RootNamespace>CodeGenSample.AppTier</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="emFrameworkCore.Core" Version="1.19.0" />
+    <PackageReference Include="emFrameworkCore.Data" Version="1.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CodeGenSample.Design.App\3.CodeGenSample.Design.App.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Entity.Generated\%28Entity%29.tt">
+      <LastGenOutput>(Entity).txt</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="Entity.Generated\%28Entity.SQL%29.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+  </ItemGroup>
+
+</Project>
