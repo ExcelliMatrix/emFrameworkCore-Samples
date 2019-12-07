@@ -81,9 +81,6 @@ namespace CodeGenSample.App.Entity
       AutomobileAppEntity xReturnValue = null;
       SqlConnection xSQLConnection = a_xSQLConnection;
 
-      //if (UserInfo == null)
-        //throw new ArgumentNullException("UserInfo");
-
       try
       {
         //----- Open SQLConnection -----
@@ -134,7 +131,7 @@ namespace CodeGenSample.App.Entity
     //---------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Read an existing Automobile using the specified SQLConnection object's GUID.
+    /// Read an existing Automobile using the specified SQLConnection object's AutomobileGUID.
     /// </summary>
     /// <param name="a_xSQLConnection">The database Connection used to perform the action.</param>
     /// <returns>AutomobileAppEntity</returns>
@@ -149,12 +146,12 @@ namespace CodeGenSample.App.Entity
     //---------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Read an existing Automobile using the specified SQLConnection and GUID.
+    /// Read an existing Automobile using the specified SQLConnection and AutomobileGUID.
     /// </summary>
     /// <param name="a_xSQLConnection">The database Connection used to perform the action.</param>
-    /// <param name="a_xGUID">The unique identifies of the Automobile to be retrieved.</param>
+    /// <param name="a_xAutomobileGUID">The unique identifies of the Automobile to be retrieved.</param>
     /// <returns>AutomobileAppEntity</returns>
-    public AutomobileAppEntity Read(SqlConnection a_xSQLConnection, GUID a_xGUID)
+    public AutomobileAppEntity Read(SqlConnection a_xSQLConnection, GUID a_xAutomobileGUID)
     {
       AutomobileAppEntity xReturnValue = null;
 
@@ -171,7 +168,7 @@ namespace CodeGenSample.App.Entity
           int iRowAffected = 0;
 
           //----- Step 1: Create new AutomobileAppEntity -----
-          using (SqlCommand xSQLCommand = SQLCommand_Read(xSQLConnection, a_xGUID))
+          using (SqlCommand xSQLCommand = SQLCommand_Read(xSQLConnection, a_xAutomobileGUID))
           {
             DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
             xSQLCommand.Transaction = xSQLTransaction;
@@ -181,8 +178,6 @@ namespace CodeGenSample.App.Entity
               while (xSQLDataReader.Read())
               {
                 xReturnValue = Import(xSQLDataReader);
-
-				
                 iRowAffected++;
               }
             }
@@ -281,9 +276,6 @@ namespace CodeGenSample.App.Entity
       AutomobileAppEntity xReturnValue = null;
 
       SqlConnection xSQLConnection = a_xSQLConnection; ;
-
-      //if (UserInfo == null)
-        //throw new ArgumentNullException("UserInfo");
 
       try
       {
@@ -522,17 +514,17 @@ namespace CodeGenSample.App.Entity
       //=======================================================================
 
       /// <summary>
-      /// Read an existing Automobile using the specified SQLConnection and GUID.
+      /// Read an existing Automobile using the specified SQLConnection and AutomobileGUID.
       /// </summary>
       /// <param name="a_xSQLConnection">The database SQLConnection used to perform the action.</param>
-      /// <param name="a_xGUID">The unique identifies of the Automobile to be retrieved.</param>
+      /// <param name="a_xAutomobileGUID">The unique identifies of the Automobile to be retrieved.</param>
       /// <returns>AutomobileAppEntity</returns>
-      public static AutomobileAppEntity Read(SqlConnection a_xSQLConnection, GUID a_xGUID)
+      public static AutomobileAppEntity Read(SqlConnection a_xSQLConnection, GUID a_xAutomobileGUID)
       {
         if (m_xAutomobileAppEntity == null)
           m_xAutomobileAppEntity = new AutomobileAppEntity();
 
-        return m_xAutomobileAppEntity.Read(a_xSQLConnection, a_xGUID);
+        return m_xAutomobileAppEntity.Read(a_xSQLConnection, a_xAutomobileGUID);
       }
 
       //=======================================================================
@@ -555,17 +547,17 @@ namespace CodeGenSample.App.Entity
       //=======================================================================
 
       /// <summary>
-      /// Delete a Automobile using the specified SQLConnection and GUID.
+      /// Delete a Automobile using the specified SQLConnection and AutomobileGUID.
       /// </summary>
       /// <param name="a_xSQLConnection">The database SQLConnection used to perform the action.</param>
-      /// <param name="a_xGUID">The unique identifies of the Automobile to be retrieved.</param>
+      /// <param name="a_xAutomobileGUID">The unique identifies of the Automobile to be retrieved.</param>
       /// <returns>AutomobileAppEntity</returns>
-      public static AutomobileAppEntity Delete(SqlConnection a_xSQLConnection, GUID a_xGUID)
+      public static AutomobileAppEntity Delete(SqlConnection a_xSQLConnection, GUID a_xAutomobileGUID)
       {
         if (m_xAutomobileAppEntity == null)
           m_xAutomobileAppEntity = new AutomobileAppEntity();
 
-        return m_xAutomobileAppEntity.Delete(a_xSQLConnection, a_xGUID);
+        return m_xAutomobileAppEntity.Delete(a_xSQLConnection, a_xAutomobileGUID);
       }
 
       //=======================================================================

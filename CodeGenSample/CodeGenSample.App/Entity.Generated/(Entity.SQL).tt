@@ -30,7 +30,7 @@
   foreach (emT4.Entity EntityItem in emT4.EntityItems())
   {
     emT4.LogWrite(emT4.OutputFilename(EntityItem));
-    string sTableName = emT4.MetadataDictionary_AttributeProperty(EntityItem.Name + "AppEntityDesign", "DatabaseTable", "Name").FirstOrDefault().Value.Value;
+    string sTableName = emT4.MetadataDictionary_AttributeProperty(EntityItem.Name + EntityItem.FileTier + "EntityDesign", "DatabaseTable", "Name").FirstOrDefault().Value.Value;
 #>
 //********************************************************************
 //*                                                                  *
@@ -51,17 +51,11 @@
 
 namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 {
-   public partial class <#=EntityItem.Name#>AppEntity : <#=EntityItem.Name#>AppEntityDesign
+   public partial class <#=EntityItem.Name#><#=EntityItem.FileTier#>Entity : <#=EntityItem.Name#><#=EntityItem.FileTier#>EntityDesign
    {
     //---------------------------------------------------------------------------------------------
+<# if (EntityItem.IncludeMethod("SQLCommand_Create")) { #>
     //---------------------------------------------------------------------------------------------
-
-    public enum AuditLogTypes { CRUD, Configuration, Security }
-    public enum AuditLogLevels { Informational, Warning, Critical }
-
-    //---------------------------------------------------------------------------------------------
-<# if (EntityItem.IncludeMethod("SQLCommand_Create")) { 
-#>    //---------------------------------------------------------------------------------------------
 
     public SqlCommand SQLCommand_Create(SqlConnection a_xSQLConnection)
     {
@@ -118,8 +112,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("SQLCommand_Delete")) { 
-#>    //---------------------------------------------------------------------------------------------
+<# if (EntityItem.IncludeMethod("SQLCommand_Delete")) { #>
+    //---------------------------------------------------------------------------------------------
 
     public SqlCommand SQLCommand_Delete(SqlConnection a_xSQLConnection)
     {
@@ -130,8 +124,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("SQLCommand_Delete")) { 
-#>    //---------------------------------------------------------------------------------------------
+<# if (EntityItem.IncludeMethod("SQLCommand_Delete")) { #>
+    //---------------------------------------------------------------------------------------------
 
     public SqlCommand SQLCommand_Delete(SqlConnection a_xSQLConnection, GUID a_xGUID)
     {
@@ -139,7 +133,9 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
       sSQLStatement =
         $@"
-          delete from <#=sTableName#>
+          update <#=sTableName#>
+            set
+              <#=EntityItem.Name#>Deleted = 'True'
             where
               <#=EntityItem.Name#>GUID = @<#=EntityItem.Name#>GUID;
         ";
@@ -151,8 +147,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("SQLCommand_Load")) { 
-#>    //---------------------------------------------------------------------------------------------
+<# if (EntityItem.IncludeMethod("SQLCommand_Load")) { #>
+    //---------------------------------------------------------------------------------------------
 
     public SqlCommand SQLCommand_Load(SqlConnection a_xSQLConnection, DataRequest a_xDataRequest)
     {
@@ -161,15 +157,15 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       string sSQLStatement = "";
 
       SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, a_xSQLConnection);
-      xSQLCommand = DataRequestExtension.ApplyDataRequest<<#=EntityItem.Name#>AppEntityDesign>(xSQLCommand, a_xDataRequest);
+      xSQLCommand = DataRequestExtension.ApplyDataRequest<<#=EntityItem.Name#><#=EntityItem.FileTier#>EntityDesign>(xSQLCommand, a_xDataRequest);
 
       return xSQLCommand;
     }
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("SQLCommand_Read")) {
-#>    //---------------------------------------------------------------------------------------------
+<# if (EntityItem.IncludeMethod("SQLCommand_Read")) {#>
+    //---------------------------------------------------------------------------------------------
 
     public SqlCommand SQLCommand_Read(SqlConnection a_xSQLConnection)
     {
@@ -203,13 +199,13 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("SQLCommand_Update")) { 
-#>    //---------------------------------------------------------------------------------------------
+<# if (EntityItem.IncludeMethod("SQLCommand_Update")) { #>
+<# List<emT4.MetadataEntry> xListMetadatEntry = emT4.GetMetadataEntries(EntityItem.DesignTierName, emT4.EntryTypes.TypeProperty, "Column", "Key"); #>
+    //---------------------------------------------------------------------------------------------
 
     public SqlCommand SQLCommand_Update(SqlConnection a_xSQLConnection)
     {
       string sSQLStatement = "";
-   <# List<emT4.MetadataEntry> xListMetadatEntry = emT4.GetMetadataEntries(EntityItem.DesignTierName, emT4.EntryTypes.TypeProperty, "Column", "Key"); #>
 
       sSQLStatement =
       $@"
@@ -279,11 +275,11 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
   }
 }
 
-//**********************************************************************************
-//*                                                                                *
-//* This code was generated from an emFramework Template. DO NOT MODIFY THIS FILE. *
-//*                                                       -----------------------  *
-//**********************************************************************************
+//**************************************************************************************
+//*                                                                                    *
+//* This code was generated from an emFrameworkCore Template. DO NOT MODIFY THIS FILE. *
+//*                                                           -----------------------  *
+//**************************************************************************************
 <#
     emT4.SaveOutput(EntityItem);
   }

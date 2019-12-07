@@ -36,5 +36,9 @@ namespace CodeGenSample.Design.App
     [StringLength(40)]
     [DatabaseTableColumn("AutomobilePartPrice")]
     public decimal AutomobilePartPrice { get; set; }
+
+    [StringLength(40)]
+    [DatabaseTableColumn("AutomobilePartDeleted")]
+    public string AutomobilePartDeleted { get; set; }
   }
 }

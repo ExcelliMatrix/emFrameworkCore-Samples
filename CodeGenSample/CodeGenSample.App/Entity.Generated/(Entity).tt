@@ -92,8 +92,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     }
 
     //---------------------------------------------------------------------------------------------
-<# if (EntityItem.IncludeMethod("Create")) { 
-#>    //---------------------------------------------------------------------------------------------
+<# if (EntityItem.IncludeMethod("Create")) { #>
+    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Create a new <#=EntityItem.Name#> using the specified SQLConnection.
@@ -104,9 +104,6 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     {
       <#=EntityItem.Name#>AppEntity xReturnValue = null;
       SqlConnection xSQLConnection = a_xSQLConnection;
-
-      //if (UserInfo == null)
-        //throw new ArgumentNullException("UserInfo");
 
       try
       {
@@ -122,8 +119,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 1: Create new <#=EntityItem.Name#>AppEntity -----
           using (SqlCommand xSQLCommand = SQLCommand_Create(xSQLConnection))
           {
-<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
-#>            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { #>
+            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             xSQLCommand.Transaction = xSQLTransaction;
             iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -162,7 +159,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 #>    //---------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Read an existing <#=EntityItem.Name#> using the specified SQLConnection object's GUID.
+    /// Read an existing <#=EntityItem.Name#> using the specified SQLConnection object's <#=EntityItem.Name#>GUID.
     /// </summary>
     /// <param name="a_xSQLConnection">The database Connection used to perform the action.</param>
     /// <returns><#=EntityItem.Name#>AppEntity</returns>
@@ -177,12 +174,12 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //---------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Read an existing <#=EntityItem.Name#> using the specified SQLConnection and GUID.
+    /// Read an existing <#=EntityItem.Name#> using the specified SQLConnection and <#=EntityItem.Name#>GUID.
     /// </summary>
     /// <param name="a_xSQLConnection">The database Connection used to perform the action.</param>
-    /// <param name="a_xGUID">The unique identifies of the <#=EntityItem.Name#> to be retrieved.</param>
+    /// <param name="a_x<#=EntityItem.Name#>GUID">The unique identifies of the <#=EntityItem.Name#> to be retrieved.</param>
     /// <returns><#=EntityItem.Name#>AppEntity</returns>
-    public <#=EntityItem.Name#>AppEntity Read(SqlConnection a_xSQLConnection, GUID a_xGUID)
+    public <#=EntityItem.Name#>AppEntity Read(SqlConnection a_xSQLConnection, GUID a_x<#=EntityItem.Name#>GUID)
     {
       <#=EntityItem.Name#>AppEntity xReturnValue = null;
 
@@ -199,10 +196,10 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           int iRowAffected = 0;
 
           //----- Step 1: Create new <#=EntityItem.Name#>AppEntity -----
-          using (SqlCommand xSQLCommand = SQLCommand_Read(xSQLConnection, a_xGUID))
+          using (SqlCommand xSQLCommand = SQLCommand_Read(xSQLConnection, a_x<#=EntityItem.Name#>GUID))
           {
-<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
-#>            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { #>
+            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             xSQLCommand.Transaction = xSQLTransaction;
             using (SqlDataReader xSQLDataReader = xSQLCommand.ExecuteReader())
@@ -211,22 +208,6 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
               while (xSQLDataReader.Read())
               {
                 xReturnValue = Import(xSQLDataReader);
-
-				<# if(EntityItem.Name == "Role"){#>
-
-				///*-----Get the Roles of User------*/
-                if (xReturnValue != null)
-                {
-                  IEnumerable<CapabilityAppEntity> xList_Capablities = CapabilityAppEntity.Helper.Load_ByRoleGUID(SQLUtility.GetConnection().ConnectionString, xReturnValue.GUID);
-                  if (xList_Capablities != null)
-                    xReturnValue.Capabilities = xList_Capablities.ToList();
-
-                  IEnumerable<UserAppEntity> xList_Users = UserAppEntity.Helper.Load_ByRoleGUID(SQLUtility.GetConnection().ConnectionString, xReturnValue.GUID);
-                  if (xList_Users != null)
-                    xReturnValue.Users = xList_Users.ToList();
-                }
-			<#	} #>
-
                 iRowAffected++;
               }
             }
@@ -255,8 +236,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("Update")) { 
-#>    //---------------------------------------------------------------------------------------------
+<# if (EntityItem.IncludeMethod("Update")) { #>
+    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Update this <#=EntityItem.Name#> using the specified ConnectionString.
@@ -283,8 +264,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 1: Update <#=EntityItem.Name#>AppEntity entry -----
           using (SqlCommand xSQLCommand = SQLCommand_Update(xSQLConnection))
           {
-<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
-#>            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { #>
+            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             xSQLCommand.Transaction = xSQLTransaction;
             iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -318,8 +299,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("Delete")) { 
-#>    //---------------------------------------------------------------------------------------------
+<# if (EntityItem.IncludeMethod("Delete")) { #>
+    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Delete this <#=EntityItem.Name#> using the specified SQLConnection.
@@ -331,9 +312,6 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       <#=EntityItem.Name#>AppEntity xReturnValue = null;
 
       SqlConnection xSQLConnection = a_xSQLConnection; ;
-
-      //if (UserInfo == null)
-        //throw new ArgumentNullException("UserInfo");
 
       try
       {
@@ -349,8 +327,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 1: Delete <#=EntityItem.Name#>AppEntity entry -----
           using (SqlCommand xSQLCommand = SQLCommand_Delete(xSQLConnection))
           {
-<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
-#>            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { #>
+            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             xSQLCommand.Transaction = xSQLTransaction;
             iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -384,8 +362,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("Delete")) { 
-#>    //---------------------------------------------------------------------------------------------
+<# if (EntityItem.IncludeMethod("Delete")) { #>
+    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Delete a <#=EntityItem.Name#> using the specified SQLConnection and GUID.
@@ -413,8 +391,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
           //----- Step 1: Delete <#=EntityItem.Name#>AppEntity entry -----
           using (SqlCommand xSQLCommand = SQLCommand_Delete(xSQLConnection, a_xGUID))
           {
-<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
-#>            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { #>
+            DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
             xSQLCommand.Transaction = xSQLTransaction;
             iRowAffected = xSQLCommand.ExecuteNonQuery();
@@ -448,8 +426,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("Load")) { 
-#>    //---------------------------------------------------------------------------------------------
+<# if (EntityItem.IncludeMethod("Load")) { #>
+    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Loads a set of <#=EntityItem.PluralName#> using the specified ConnectionString and DataRequest.
@@ -505,8 +483,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
         using (SqlCommand xSQLCommand = SQLCommand_Load(xSQLConnection, a_xDataRequest))
         {
-<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { 
-#>          DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
+<# if (EntityItem.IncludeMethod("DatabaseHelper.Monitor.SQLCommand")) { #>
+          DatabaseHelper.Monitor.SQLCommand(SystemInfo.Name, ApplicationInfo.Name, ApplicationInfo.Tier, xSQLCommand);
 <# } #>
           using (SqlDataReader xSQLDataReader = xSQLCommand.ExecuteReader())
           {
@@ -559,8 +537,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     //---------------------------------------------------------------------------------------------
 <# } #>
-<# if (EntityItem.IncludeMethod("Import")) { 
-#>    //---------------------------------------------------------------------------------------------
+<# if (EntityItem.IncludeMethod("Import")) { #>
+    //---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Import a <#=EntityItem.Name#> from the current SqlDataReader record.
@@ -582,27 +560,27 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     public static partial class Helper
     {
       //=======================================================================
-<# if (EntityItem.IncludeMethod("Read")) { 
-#>      //=======================================================================
+<# if (EntityItem.IncludeMethod("Read")) { #>
+      //=======================================================================
 
       /// <summary>
-      /// Read an existing <#=EntityItem.Name#> using the specified SQLConnection and GUID.
+      /// Read an existing <#=EntityItem.Name#> using the specified SQLConnection and <#=EntityItem.Name#>GUID.
       /// </summary>
       /// <param name="a_xSQLConnection">The database SQLConnection used to perform the action.</param>
-      /// <param name="a_xGUID">The unique identifies of the <#=EntityItem.Name#> to be retrieved.</param>
+      /// <param name="a_x<#=EntityItem.Name#>GUID">The unique identifies of the <#=EntityItem.Name#> to be retrieved.</param>
       /// <returns><#=EntityItem.Name#>AppEntity</returns>
-      public static <#=EntityItem.Name#>AppEntity Read(SqlConnection a_xSQLConnection, GUID a_xGUID)
+      public static <#=EntityItem.Name#>AppEntity Read(SqlConnection a_xSQLConnection, GUID a_x<#=EntityItem.Name#>GUID)
       {
         if (m_x<#=EntityItem.Name#>AppEntity == null)
           m_x<#=EntityItem.Name#>AppEntity = new <#=EntityItem.Name#>AppEntity();
 
-        return m_x<#=EntityItem.Name#>AppEntity.Read(a_xSQLConnection, a_xGUID);
+        return m_x<#=EntityItem.Name#>AppEntity.Read(a_xSQLConnection, a_x<#=EntityItem.Name#>GUID);
       }
 
       //=======================================================================
 <# } #>
-<# if (EntityItem.IncludeMethod("Update")) { 
-#>      //=======================================================================
+<# if (EntityItem.IncludeMethod("Update")) { #>
+      //=======================================================================
 
       /// <summary>
       /// Update this <#=EntityItem.Name#> using the specified SQLConnection.
@@ -619,27 +597,27 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
       //=======================================================================
 <# } #>
-<# if (EntityItem.IncludeMethod("Delete")) { 
-#>      //=======================================================================
+<# if (EntityItem.IncludeMethod("Delete")) { #>
+      //=======================================================================
 
       /// <summary>
-      /// Delete a <#=EntityItem.Name#> using the specified SQLConnection and GUID.
+      /// Delete a <#=EntityItem.Name#> using the specified SQLConnection and <#=EntityItem.Name#>GUID.
       /// </summary>
       /// <param name="a_xSQLConnection">The database SQLConnection used to perform the action.</param>
-      /// <param name="a_xGUID">The unique identifies of the <#=EntityItem.Name#> to be retrieved.</param>
+      /// <param name="a_x<#=EntityItem.Name#>GUID">The unique identifies of the <#=EntityItem.Name#> to be retrieved.</param>
       /// <returns><#=EntityItem.Name#>AppEntity</returns>
-      public static <#=EntityItem.Name#>AppEntity Delete(SqlConnection a_xSQLConnection, GUID a_xGUID)
+      public static <#=EntityItem.Name#>AppEntity Delete(SqlConnection a_xSQLConnection, GUID a_x<#=EntityItem.Name#>GUID)
       {
         if (m_x<#=EntityItem.Name#>AppEntity == null)
           m_x<#=EntityItem.Name#>AppEntity = new <#=EntityItem.Name#>AppEntity();
 
-        return m_x<#=EntityItem.Name#>AppEntity.Delete(a_xSQLConnection, a_xGUID);
+        return m_x<#=EntityItem.Name#>AppEntity.Delete(a_xSQLConnection, a_x<#=EntityItem.Name#>GUID);
       }
 
       //=======================================================================
 <# } #>
-<# if (EntityItem.IncludeMethod("Load")) { 
-#>      //=======================================================================
+<# if (EntityItem.IncludeMethod("Load")) { #>
+      //=======================================================================
 
       /// <summary>
       /// Loads a set of <#=EntityItem.PluralName#> using the specified SQLConnection and DataRequest.
@@ -691,8 +669,8 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
       //=======================================================================
 <# } #>
-<# if (EntityItem.IncludeMethod("Import")) { 
-#>      //=======================================================================
+<# if (EntityItem.IncludeMethod("Import")) { #>
+      //=======================================================================
 
       /// <summary>
       /// Import an <#=EntityItem.Name#> from the current SqlDataReader record.
@@ -765,11 +743,11 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
   }
 }
 
-//**********************************************************************************
-//*                                                                                *
-//* This code was generated from an emFramework Template. DO NOT MODIFY THIS FILE. *
-//*                                                       -----------------------  *
-//**********************************************************************************
+//**************************************************************************************
+//*                                                                                    *
+//* This code was generated from an emFrameworkCore Template. DO NOT MODIFY THIS FILE. *
+//*                                                           -----------------------  *
+//**************************************************************************************
 <#
     emT4.SaveOutput(EntityItem);
   }

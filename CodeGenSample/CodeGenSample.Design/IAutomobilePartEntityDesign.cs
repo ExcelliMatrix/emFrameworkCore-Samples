@@ -14,6 +14,6 @@ namespace CodeGenSample.Design
     string AutomobilePartName { get; set; }
     string AutomobilePartDescription { get; set; }
     decimal AutomobilePartPrice { get; set; }
-
+    string AutomobilePartDeleted { get; set; }
   }
 }

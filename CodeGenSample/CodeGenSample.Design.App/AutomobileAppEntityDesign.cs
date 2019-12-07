@@ -27,5 +27,8 @@ namespace CodeGenSample.Design.App
 
     [DatabaseTableColumn("AutomobileYear")]
     public int AutomobileYear { get; set; }
+
+    [DatabaseTableColumn("AutomobileDeleted")]
+    public string AutomobileDeleted { get; set; }
   }
 }

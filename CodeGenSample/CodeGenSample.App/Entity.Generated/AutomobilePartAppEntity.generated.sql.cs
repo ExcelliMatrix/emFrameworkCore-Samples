@@ -27,12 +27,6 @@ namespace CodeGenSample.App.Entity
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
-    public enum AuditLogTypes { CRUD, Configuration, Security }
-    public enum AuditLogLevels { Informational, Warning, Critical }
-
-    //---------------------------------------------------------------------------------------------
-    //---------------------------------------------------------------------------------------------
-
     public SqlCommand SQLCommand_Create(SqlConnection a_xSQLConnection)
     {
       string sSQLStatement = "";
@@ -91,7 +85,9 @@ namespace CodeGenSample.App.Entity
 
       sSQLStatement =
         $@"
-          delete from CodeGen_AutomobilePart
+          update CodeGen_AutomobilePart
+            set
+              AutomobilePartDeleted = 'True'
             where
               AutomobilePartGUID = @AutomobilePartGUID;
         ";
@@ -155,7 +151,7 @@ namespace CodeGenSample.App.Entity
     public SqlCommand SQLCommand_Update(SqlConnection a_xSQLConnection)
     {
       string sSQLStatement = "";
-   
+
       sSQLStatement =
       $@"
         update CodeGen_AutomobilePart
@@ -273,8 +269,8 @@ namespace CodeGenSample.App.Entity
   }
 }
 
-//**********************************************************************************
-//*                                                                                *
-//* This code was generated from an emFramework Template. DO NOT MODIFY THIS FILE. *
-//*                                                       -----------------------  *
-//**********************************************************************************
+//**************************************************************************************
+//*                                                                                    *
+//* This code was generated from an emFrameworkCore Template. DO NOT MODIFY THIS FILE. *
+//*                                                           -----------------------  *
+//**************************************************************************************

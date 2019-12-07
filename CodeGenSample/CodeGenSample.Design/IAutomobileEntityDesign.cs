@@ -12,5 +12,6 @@ namespace CodeGenSample.Design
     string AutomobileMake { get; set; }
     string AutomobileModel { get; set; }
     int AutomobileYear { get; set; }
+    string AutomobileDeleted { get; set; }
   }
 }
