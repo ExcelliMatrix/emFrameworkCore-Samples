@@ -1,0 +1,55 @@
+﻿@using CodeGenSample.WebTier.Models
+@model AutomobileViewModel
+@{
+  ViewData["Title"] = "Home/AutomobileView";
+}
+
+<div class="text-center">
+  <h1 class="display-4">@ViewData["Title"]</h1>
+  <p>List of automobile currently in the database. The Web-Tier CodeGenSample.Web applicaiton makes a RESTful request to the App-Tier CodeGenSample.App application which then executes a database query.</p>
+
+  <p><b>Make:</b> @Model.AutomobileMake</p>
+  <p><b>Model:</b> @Model.AutomobileModel</p>
+  <p><b>Year:</b> @Model.AutomobileYear</p>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        Action
+      </div>
+      <div class="col-sm">
+        Number
+      </div>
+      <div class="col-sm">
+        Name
+      </div>
+      <div class="col-sm">
+        Price
+      </div>
+      <div class="col-sm">
+        Description
+      </div>
+    </div>
+    @foreach (AutomobilePartViewModel xAutomobilePartViewModel in Model.AutomobileParts)
+    {
+      <div class="row">
+        <div class="col-sm">
+          @Html.ActionLink("View", "AutomobilePartView", "Home", xAutomobilePartViewModel.AutomobilePartGUID)
+          @Html.ActionLink("Delete", "AutomobilePartDelete", "Home", xAutomobilePartViewModel.AutomobilePartGUID)
+        </div>
+        <div class="col-sm">
+          @xAutomobilePartViewModel.AutomobilePartNumber
+        </div>
+        <div class="col-sm">
+          @xAutomobilePartViewModel.AutomobilePartName
+        </div>
+        <div class="col-sm">
+          @xAutomobilePartViewModel.AutomobilePartPrice.ToString("C")
+        </div>
+        <div class="col-sm">
+          @xAutomobilePartViewModel.AutomobilePartDescription
+        </div>
+      </div>
+    }
+  </div>
+</div>

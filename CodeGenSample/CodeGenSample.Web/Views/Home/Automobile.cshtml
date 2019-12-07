@@ -1,8 +1,45 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using CodeGenSample.WebTier.Models
+@model List<AutomobileViewModel>
+@{
+  ViewData["Title"] = "Home/Automobile";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+  <h1 class="display-4">@ViewData["Title"]</h1>
+  <p>List of automobile currently in the database. The Web-Tier CodeGenSample.Web applicaiton makes a RESTful request to the App-Tier CodeGenSample.App application which then executes a database query.</p>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        Action
+      </div>
+      <div class="col-sm">
+        Make
+      </div>
+      <div class="col-sm">
+        Model
+      </div>
+      <div class="col-sm">
+        Year
+      </div>
+    </div>
+    @foreach (AutomobileViewModel xAutomobileViewModel in Model)
+    {
+      <div class="row">
+        <div class="col-sm">
+          @Html.ActionLink("View", "AutomobileView", "Home", xAutomobileViewModel.AutomobileGUID)
+          @Html.ActionLink("Delete", "AutomobileDelete", "Home", xAutomobileViewModel.AutomobileGUID)
+        </div>
+        <div class="col-sm">
+          @xAutomobileViewModel.AutomobileMake
+        </div>
+        <div class="col-sm">
+          @xAutomobileViewModel.AutomobileModel
+        </div>
+        <div class="col-sm">
+          @xAutomobileViewModel.AutomobileYear
+        </div>
+      </div>
+    }
+  </div>
 </div>
