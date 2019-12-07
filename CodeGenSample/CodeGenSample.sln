@@ -185,7 +185,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "(External Libraries)", "(Ex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "5.CodeGenSample.App", "CodeGenSample.App\5.CodeGenSample.App.csproj", "{36BA2AA6-55A5-47B5-BB95-CE0583CC7142}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "0.CodeGenSample", "CodeGenSample\0.CodeGenSample.csproj", "{5A49D0A3-716B-4425-9289-03327A9F599F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "0.CodeGenSample", "CodeGenSample\0.CodeGenSample.csproj", "{5A49D0A3-716B-4425-9289-03327A9F599F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{958C0A73-F964-4DC8-B0B7-51AC09E0E555}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

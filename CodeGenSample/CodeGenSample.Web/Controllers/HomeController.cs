@@ -23,7 +23,7 @@ namespace CodeGenSample.Web.Controllers
       return View();
     }
 
-    public IActionResult Privacy()
+    public IActionResult Automobile()
     {
       return View();
     }
