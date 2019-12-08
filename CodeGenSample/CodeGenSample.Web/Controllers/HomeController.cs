@@ -9,6 +9,9 @@ using CodeGenSample.Web.Models;
 using CodeGenSample.Design.Web;
 using CodeGenSample.WebTier.Models;
 using CodeGenSample.Web.Entity;
+using CodeGenSample.Design;
+using CodeGenSample.Web.Entity.Extensions;
+using emFrameworkCore.Core;
 
 namespace CodeGenSample.Web.Controllers
 {
@@ -28,44 +31,15 @@ namespace CodeGenSample.Web.Controllers
 
     public IActionResult Automobile()
     {
-      List<AutomobileViewModel> xAutomobileViewModels = new List<AutomobileViewModel>();
-      foreach (AutomobileWebEntity xAutomobileWebEntity in AutomobileWebEntity.Helper.Load(ApplicationInfo.BaseURI, null))
-      {
-        xAutomobileViewModels.Add(new AutomobileViewModel()
-        {
-          AutomobileGUID = xAutomobileWebEntity.AutomobileGUID,
-          AutomobileMake = xAutomobileWebEntity.AutomobileMake,
-          AutomobileModel = xAutomobileWebEntity.AutomobileModel,
-          AutomobileYear = xAutomobileWebEntity.AutomobileYear
-        });
-      }
-      xAutomobileViewModels.Add(new AutomobileViewModel()
-      {
-        AutomobileGUID = new emFrameworkCore.Core.GUID(),
-        AutomobileMake = "Ford",
-        AutomobileModel = "F150",
-        AutomobileYear = 2014
-      });
-      xAutomobileViewModels.Add(new AutomobileViewModel()
-      {
-        AutomobileGUID = new emFrameworkCore.Core.GUID(),
-        AutomobileMake = "Ford",
-        AutomobileModel = "F250",
-        AutomobileYear = 2001
-      });
+      IEnumerable<AutomobileViewModel> xAutomobileViewModels = AutomobileWebEntity.Helper.Load(ApplicationInfo.BaseURI).ToAutomobileViewModel();
+
       return View(xAutomobileViewModels);
     }
 
     public IActionResult AutomobileView(string GUIDString)
     {
-      AutomobileViewModel xAutomobileViewModel = new AutomobileViewModel()
-      {
-        AutomobileGUID = new emFrameworkCore.Core.GUID(GUIDString),
-        AutomobileMake = "Ford",
-        AutomobileModel = "F350",
-        AutomobileYear = 2020,
-        AutomobileParts = new List<AutomobilePartViewModel>()
-      };
+      AutomobileViewModel xAutomobileViewModel = AutomobileWebEntity.Helper.Read(ApplicationInfo.BaseURI, new GUID(GUIDString)).ToAutomobileViewModel();
+      xAutomobileViewModel.AutomobileParts = new List<AutomobilePartViewModel>();
       xAutomobileViewModel.AutomobileParts.Add(new AutomobilePartViewModel()
       {
         AutomobilePartGUID = new emFrameworkCore.Core.GUID(),

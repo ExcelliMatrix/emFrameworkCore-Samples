@@ -95,6 +95,10 @@ namespace CodeGenSample.App.LocalDB
               SqlCommand xSQLCommand = new SqlCommand(sSQLStatement, xSQLConnection);
               xSQLCommand.ExecuteNonQuery();
 
+              AddAutomobile(xSQLConnection, "{86e95943-3a64-4fbe-94a6-ee015bd1d7db}", "Chevrolet", "Cavalier", 1996);
+              AddAutomobile(xSQLConnection, "{8262883e-b03c-4b96-8fde-c92f3b6e19cb}", "Toyota", "Truck", 1998);
+              AddAutomobile(xSQLConnection, "{a6bc233a-5e18-493a-9e39-5f0ae71e079a}", "Jeep", "Cherokee", 2000);
+              AddAutomobile(xSQLConnection, "{046dc6e1-38dd-479d-a864-6a03b1da7098}", "Ford", "F150", 2014);
               AddAutomobile(xSQLConnection, "{f712dd3a-697d-426a-9869-b7e9b0da22ce}", "Chevrolet", "Camero", 2018);
 
               sSQLStatement = "";

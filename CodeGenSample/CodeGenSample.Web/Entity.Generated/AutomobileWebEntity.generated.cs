@@ -14,7 +14,9 @@
 // CodeGenFilename:  (CodeGen).xml
 // TemplateFilename: (Entity).tt
 
+using CodeGenSample.Design;
 using CodeGenSample.Design.Web;
+using CodeGenSample.Web.Entity.Extensions;
 using CodeGenSample.WebTier;
 using emFrameworkCore.Core;
 using emFrameworkCore.Data;
@@ -22,11 +24,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Net.Http;
 
 namespace CodeGenSample.Web.Entity
 {
- public partial class AutomobileWebEntity : AutomobileWebEntityDesign, IEntity_WebAPIConnection<AutomobileWebEntity>
+  public partial class AutomobileWebEntity : AutomobileWebEntityDesign, IEntity_WebAPIConnection<AutomobileWebEntity>
   {
 
     //---------------------------------------------------------------------------------------------
@@ -117,6 +119,7 @@ namespace CodeGenSample.Web.Entity
 
       try
       {
+        xReturnValue = WebAPI_Read(a_xURI, a_xAutomobileGUID);
       }
       catch (Exception xException)
       {
@@ -136,7 +139,7 @@ namespace CodeGenSample.Web.Entity
       return xReturnValue;
     }
 
-    
+
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
@@ -253,15 +256,19 @@ namespace CodeGenSample.Web.Entity
     /// <returns>AutomobileWebEntity</returns>
     public IEnumerable<AutomobileWebEntity> Load(Uri a_xURI)
     {
+      IEnumerable<AutomobileWebEntity> xReturnValue = null;
+
       DataRequest xDataRequest = DataRequestFactory();
       DataResult xDataResult = new DataResult();
 
-      return Load(a_xURI, xDataRequest, out xDataResult);
+      xReturnValue = Load(a_xURI, xDataRequest, out xDataResult).ToAutomobileWebEntity();
+
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
-  
+
     /// <summary>
     /// Loads a set of Automobiles using the specified Uri and DataRequest.
     /// </summary>
@@ -270,8 +277,12 @@ namespace CodeGenSample.Web.Entity
     /// <returns>AutomobileWebEntity</returns>
     public IEnumerable<AutomobileWebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest)
     {
+      IEnumerable<AutomobileWebEntity> xReturnValue = null;
+
       DataResult xDataResult = new DataResult();
-      return Load(a_xURI, a_xDataRequest, out xDataResult);
+      xReturnValue = Load(a_xURI, a_xDataRequest, out xDataResult).ToAutomobileWebEntity();
+
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -286,11 +297,23 @@ namespace CodeGenSample.Web.Entity
     /// <returns>IEnumerable<AutomobileWebEntity></returns>
     public IEnumerable<AutomobileWebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest, out DataResult a_xDataResult)
     {
-      List<AutomobileWebEntity> xReturnValue = null;
+      IEnumerable<AutomobileWebEntity> xReturnValue = null;
+
       a_xDataResult = null;
 
       try
       {
+        xReturnValue = WebAPI_Load(a_xURI, a_xDataRequest).ToAutomobileWebEntity();
+
+        a_xDataResult = new DataResult()
+        {
+          TotalCount = xReturnValue.Count(),
+          DatabaseDateTime = DateTime.Now,
+          FilterCount = 0,
+          PageCount = 0,
+          PageNumber = 0,
+          PageSize = 0
+        };
       }
       catch (Exception xException)
       {
@@ -338,6 +361,7 @@ namespace CodeGenSample.Web.Entity
     {
       List<KeyValuePair<string, string>> xReturnValue = new List<KeyValuePair<string, string>>();
 
+      xReturnValue.Add(new KeyValuePair<string, string>(nameof(AutomobileDeleted), nameof(AutomobileDeleted).ToString()));
       xReturnValue.Add(new KeyValuePair<string, string>(nameof(AutomobileGUID), nameof(AutomobileGUID).ToString()));
       xReturnValue.Add(new KeyValuePair<string, string>(nameof(AutomobileMake), nameof(AutomobileMake).ToString()));
       xReturnValue.Add(new KeyValuePair<string, string>(nameof(AutomobileModel), nameof(AutomobileModel).ToString()));
@@ -408,6 +432,26 @@ namespace CodeGenSample.Web.Entity
       /// Loads a set of Automobiles using the specified Uri and DataRequest.
       /// </summary>
       /// <param name="a_xURI">The database Uri used to perform the action.</param>
+      /// <returns>AutomobileWebEntity</returns>
+      public static IEnumerable<AutomobileWebEntity> Load(Uri a_xURI)
+      {
+        IEnumerable<AutomobileWebEntity> xReturnValue = null;
+
+        if (m_xAutomobileWebEntity == null)
+          m_xAutomobileWebEntity = new AutomobileWebEntity();
+
+        xReturnValue = m_xAutomobileWebEntity.Load(a_xURI);
+
+        return xReturnValue;
+      }
+
+      //=======================================================================
+      //=======================================================================
+
+      /// <summary>
+      /// Loads a set of Automobiles using the specified Uri and DataRequest.
+      /// </summary>
+      /// <param name="a_xURI">The database Uri used to perform the action.</param>
       /// <param name="a_xDataRequest">DataRequest that specifies the set of Automobiles to be retrieved.</param>
       /// <returns>AutomobileWebEntity</returns>
       public static IEnumerable<AutomobileWebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest)
@@ -417,7 +461,6 @@ namespace CodeGenSample.Web.Entity
 
         return m_xAutomobileWebEntity.Load(a_xURI, a_xDataRequest);
       }
-
 
       //=======================================================================
       //=======================================================================
@@ -431,7 +474,7 @@ namespace CodeGenSample.Web.Entity
       /// <returns>IEnumerable<AutomobileWebEntity></returns>
       public static IEnumerable<AutomobileWebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest, out DataResult a_xDataResult)
       {
-        if (m_xAutomobileWebEntity== null)
+        if (m_xAutomobileWebEntity == null)
           m_xAutomobileWebEntity = new AutomobileWebEntity();
 
         return m_xAutomobileWebEntity.Load(a_xURI, a_xDataRequest, out a_xDataResult);
@@ -482,6 +525,7 @@ namespace CodeGenSample.Web.Entity
     //-----
     //----- Metadata available for "Entity[AutomobileWebEntityDesign]"
     //-----
+    //----- AutomobileDeleted                        Key = "Entity[AutomobileWebEntityDesign].Property[AutomobileDeleted]"
     //----- AutomobileGUID                           Key = "Entity[AutomobileWebEntityDesign].Property[AutomobileGUID]"
     //----- AutomobileMake                           Key = "Entity[AutomobileWebEntityDesign].Property[AutomobileMake]"
     //----- AutomobileModel                          Key = "Entity[AutomobileWebEntityDesign].Property[AutomobileModel]"
@@ -491,6 +535,7 @@ namespace CodeGenSample.Web.Entity
     //----- (Type)                                   Entity[AutomobileWebEntityDesign] == "null"
     //----- (TypeAttribute)                          Entity[AutomobileWebEntityDesign].Attribute[WebResource] == "True"
     //----- (TypeAttributeProperty)                  Entity[AutomobileWebEntityDesign].Attribute[WebResource].Property[Name] == "Automobile"
+    //----- (TypeProperty)                           Entity[AutomobileWebEntityDesign].Property[AutomobileDeleted] == "null"
     //----- (TypeProperty)                           Entity[AutomobileWebEntityDesign].Property[AutomobileGUID] == "null"
     //----- (TypeProperty)                           Entity[AutomobileWebEntityDesign].Property[AutomobileMake] == "null"
     //----- (TypeProperty)                           Entity[AutomobileWebEntityDesign].Property[AutomobileModel] == "null"
@@ -502,8 +547,8 @@ namespace CodeGenSample.Web.Entity
   }
 }
 
-//**********************************************************************************
-//*                                                                                *
-//* This code was generated from an emFramework Template. DO NOT MODIFY THIS FILE. *
-//*                                                       -----------------------  *
-//**********************************************************************************
+//**************************************************************************************
+//*                                                                                    *
+//* This code was generated from an emFrameworkCore Template. DO NOT MODIFY THIS FILE. *
+//*                                                           -----------------------  *
+//**************************************************************************************

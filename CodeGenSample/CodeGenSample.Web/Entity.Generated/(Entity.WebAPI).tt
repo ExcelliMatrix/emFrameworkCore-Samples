@@ -104,8 +104,9 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     {
       HttpResponseMessage xReturnValue = null;
 
-      HttpClient xHttpClient = new HttpClient();
-      xReturnValue = xHttpClient.DeleteAsync(a_xURI).Result;
+      HttpClient xHTTPClient = new HttpClient();
+      Uri xURI = new Uri(a_xURI, "/api/<#=EntityItem.Name#>");
+      xReturnValue = xHTTPClient.GetAsync(xURI).Result;
 
       return xReturnValue;
     }

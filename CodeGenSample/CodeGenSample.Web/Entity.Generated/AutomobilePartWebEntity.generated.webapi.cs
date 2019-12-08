@@ -74,8 +74,9 @@ namespace CodeGenSample.Web.Entity
     {
       HttpResponseMessage xReturnValue = null;
 
-      HttpClient xHttpClient = new HttpClient();
-      xReturnValue = xHttpClient.DeleteAsync(a_xURI).Result;
+      HttpClient xHTTPClient = new HttpClient();
+      Uri xURI = new Uri(a_xURI, "/api/AutomobilePart");
+      xReturnValue = xHTTPClient.GetAsync(xURI).Result;
 
       return xReturnValue;
     }
@@ -121,17 +122,12 @@ namespace CodeGenSample.Web.Entity
 
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
-
-
-	
-
-	
-
     //---------------------------------------------------------------------------------------------
     //-----
     //----- Metadata available for "Entity[AutomobilePartWebEntityDesign]"
     //-----
     //----- AutomobileGUID                           Key = "Entity[AutomobilePartWebEntityDesign].Property[AutomobileGUID]"
+    //----- AutomobilePartDeleted                    Key = "Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartDeleted]"
     //----- AutomobilePartDescription                Key = "Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartDescription]"
     //----- AutomobilePartGUID                       Key = "Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartGUID]"
     //----- AutomobilePartName                       Key = "Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartName]"
@@ -143,6 +139,7 @@ namespace CodeGenSample.Web.Entity
     //----- (TypeAttribute)                          Entity[AutomobilePartWebEntityDesign].Attribute[WebResource] == "True"
     //----- (TypeAttributeProperty)                  Entity[AutomobilePartWebEntityDesign].Attribute[WebResource].Property[Name] == "AutomobilePart"
     //----- (TypeProperty)                           Entity[AutomobilePartWebEntityDesign].Property[AutomobileGUID] == "null"
+    //----- (TypeProperty)                           Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartDeleted] == "null"
     //----- (TypeProperty)                           Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartDescription] == "null"
     //----- (TypeProperty)                           Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartGUID] == "null"
     //----- (TypeProperty)                           Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartName] == "null"
@@ -154,8 +151,8 @@ namespace CodeGenSample.Web.Entity
   }
 }
 
-//**********************************************************************************
-//*                                                                                *
-//* This code was generated from an emFramework Template. DO NOT MODIFY THIS FILE. *
-//*                                                       -----------------------  *
-//**********************************************************************************
+//**************************************************************************************
+//*                                                                                    *
+//* This code was generated from an emFrameworkCore Template. DO NOT MODIFY THIS FILE. *
+//*                                                           -----------------------  *
+//**************************************************************************************

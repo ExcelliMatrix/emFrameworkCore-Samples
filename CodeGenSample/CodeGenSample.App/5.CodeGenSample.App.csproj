@@ -1,15 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>CodeGenSample.AppTier</AssemblyName>
     <RootNamespace>CodeGenSample.AppTier</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="emFrameworkCore.Core" Version="1.19.0" />
-    <PackageReference Include="emFrameworkCore.Data" Version="1.15.0" />
-    <PackageReference Include="emFrameworkCore.Database" Version="1.20.0" />
+    <PackageReference Include="emFrameworkCore.Core" Version="1.22.0" />
+    <PackageReference Include="emFrameworkCore.Data" Version="1.17.0" />
+    <PackageReference Include="emFrameworkCore.Database" Version="1.22.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>

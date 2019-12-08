@@ -13,6 +13,7 @@
 // CodeGenFilename:  (CodeGen.WebAPI).xml
 // TemplateFilename: (Entity.WebAPI).tt
 
+using CodeGenSample.Design;
 using CodeGenSample.Design.Web;
 using CodeGenSample.WebTier;
 using emFrameworkCore.Core;
@@ -26,8 +27,8 @@ using System.Net.Http;
 
 namespace CodeGenSample.Web.Entity
 {
-   public partial class AutomobileWebEntity
-   {
+  public partial class AutomobileWebEntity
+  {
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
@@ -70,12 +71,28 @@ namespace CodeGenSample.Web.Entity
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
-    public HttpResponseMessage WebAPI_Load(Uri a_xURI, DataRequest a_xDataRequest)
+    public IEnumerable<AutomobileWebEntity> WebAPI_Load(Uri a_xURI, DataRequest a_xDataRequest)
     {
-      HttpResponseMessage xReturnValue = null;
+      IEnumerable<AutomobileWebEntity> xAutomobileWebEntities = null;
 
-      HttpClient xHttpClient = new HttpClient();
-      xReturnValue = xHttpClient.DeleteAsync(a_xURI).Result;
+      HttpClient xHTTPClient = new HttpClient();
+      Uri xURI = new Uri(a_xURI, "/api/Automobile");
+      HttpResponseMessage xHTTPResponseMessage = xHTTPClient.GetAsync(xURI).Result;
+      if (xHTTPResponseMessage.IsSuccessStatusCode)
+      {
+        string sResult = xHTTPResponseMessage.Content.ReadAsStringAsync().Result;
+        xAutomobileWebEntities = JsonConvert.DeserializeObject<IEnumerable<AutomobileWebEntity>>(sResult);
+      }
+
+      return xAutomobileWebEntities;
+    }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+
+    public AutomobileWebEntity WebAPI_Read(Uri a_xURI)
+    {
+      AutomobileWebEntity xReturnValue = WebAPI_Read(a_xURI, AutomobileGUID);
 
       return xReturnValue;
     }
@@ -83,25 +100,20 @@ namespace CodeGenSample.Web.Entity
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
-    public HttpResponseMessage WebAPI_Read(Uri a_xURI)
+    public AutomobileWebEntity WebAPI_Read(Uri a_xURI, GUID a_xGUID)
     {
-      HttpResponseMessage xReturnValue = WebAPI_Read(a_xURI, AutomobileGUID);
+      AutomobileWebEntity xAutomobileWebEntity = null;
 
-      return xReturnValue;
-    }
+      HttpClient xHTTPClient = new HttpClient();
+      Uri xURI = new Uri(a_xURI, $"/api/Automobile/{a_xGUID.GUIDString}");
+      HttpResponseMessage xHTTPResponseMessage = xHTTPClient.GetAsync(xURI).Result;
+      if (xHTTPResponseMessage.IsSuccessStatusCode)
+      {
+        string sResult = xHTTPResponseMessage.Content.ReadAsStringAsync().Result;
+        xAutomobileWebEntity = JsonConvert.DeserializeObject<AutomobileWebEntity>(sResult);
+      }
 
-    //---------------------------------------------------------------------------------------------
-    //---------------------------------------------------------------------------------------------
-
-    public HttpResponseMessage WebAPI_Read(Uri a_xURI, GUID a_xGUID)
-    {
-      HttpResponseMessage xReturnValue = null;
-
-      HttpClient xHttpClient = new HttpClient();
-      string sURL = $"{a_xURI}/{a_xGUID}";
-      xReturnValue = xHttpClient.DeleteAsync(sURL).Result;
-
-      return xReturnValue;
+      return xAutomobileWebEntity;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -121,16 +133,11 @@ namespace CodeGenSample.Web.Entity
 
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
-
-
-	
-
-	
-
     //---------------------------------------------------------------------------------------------
     //-----
     //----- Metadata available for "Entity[AutomobileWebEntityDesign]"
     //-----
+    //----- AutomobileDeleted                        Key = "Entity[AutomobileWebEntityDesign].Property[AutomobileDeleted]"
     //----- AutomobileGUID                           Key = "Entity[AutomobileWebEntityDesign].Property[AutomobileGUID]"
     //----- AutomobileMake                           Key = "Entity[AutomobileWebEntityDesign].Property[AutomobileMake]"
     //----- AutomobileModel                          Key = "Entity[AutomobileWebEntityDesign].Property[AutomobileModel]"
@@ -140,6 +147,7 @@ namespace CodeGenSample.Web.Entity
     //----- (Type)                                   Entity[AutomobileWebEntityDesign] == "null"
     //----- (TypeAttribute)                          Entity[AutomobileWebEntityDesign].Attribute[WebResource] == "True"
     //----- (TypeAttributeProperty)                  Entity[AutomobileWebEntityDesign].Attribute[WebResource].Property[Name] == "Automobile"
+    //----- (TypeProperty)                           Entity[AutomobileWebEntityDesign].Property[AutomobileDeleted] == "null"
     //----- (TypeProperty)                           Entity[AutomobileWebEntityDesign].Property[AutomobileGUID] == "null"
     //----- (TypeProperty)                           Entity[AutomobileWebEntityDesign].Property[AutomobileMake] == "null"
     //----- (TypeProperty)                           Entity[AutomobileWebEntityDesign].Property[AutomobileModel] == "null"
@@ -150,8 +158,8 @@ namespace CodeGenSample.Web.Entity
   }
 }
 
-//**********************************************************************************
-//*                                                                                *
-//* This code was generated from an emFramework Template. DO NOT MODIFY THIS FILE. *
-//*                                                       -----------------------  *
-//**********************************************************************************
+//**************************************************************************************
+//*                                                                                    *
+//* This code was generated from an emFrameworkCore Template. DO NOT MODIFY THIS FILE. *
+//*                                                           -----------------------  *
+//**************************************************************************************

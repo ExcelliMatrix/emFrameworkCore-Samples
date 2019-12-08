@@ -563,6 +563,22 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       /// Loads a set of <#=EntityItem.PluralName#> using the specified Uri and DataRequest.
       /// </summary>
       /// <param name="a_xURI">The database Uri used to perform the action.</param>
+      /// <returns><#=EntityItem.Name#>WebEntity</returns>
+      public static IEnumerable<<#=EntityItem.Name#>WebEntity> Load(Uri a_xURI)
+      {
+        if (m_x<#=EntityItem.Name#>WebEntity == null)
+          m_x<#=EntityItem.Name#>WebEntity = new <#=EntityItem.Name#>WebEntity();
+
+        return m_x<#=EntityItem.Name#>WebEntity.Load(a_xURI);
+      }
+
+      //=======================================================================
+      //=======================================================================
+
+      /// <summary>
+      /// Loads a set of <#=EntityItem.PluralName#> using the specified Uri and DataRequest.
+      /// </summary>
+      /// <param name="a_xURI">The database Uri used to perform the action.</param>
       /// <param name="a_xDataRequest">DataRequest that specifies the set of <#=EntityItem.PluralName#> to be retrieved.</param>
       /// <returns><#=EntityItem.Name#>WebEntity</returns>
       public static IEnumerable<<#=EntityItem.Name#>WebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest)
@@ -573,11 +589,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
         return m_x<#=EntityItem.Name#>WebEntity.Load(a_xURI, a_xDataRequest);
       }
 
-
       //=======================================================================
-<# } #>
-<# if (EntityItem.IncludeMethod("Load")) { 
-#>
       //=======================================================================
 
       /// <summary>

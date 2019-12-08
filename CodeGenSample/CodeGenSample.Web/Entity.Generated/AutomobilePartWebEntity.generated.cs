@@ -339,6 +339,7 @@ namespace CodeGenSample.Web.Entity
       List<KeyValuePair<string, string>> xReturnValue = new List<KeyValuePair<string, string>>();
 
       xReturnValue.Add(new KeyValuePair<string, string>(nameof(AutomobileGUID), nameof(AutomobileGUID).ToString()));
+      xReturnValue.Add(new KeyValuePair<string, string>(nameof(AutomobilePartDeleted), nameof(AutomobilePartDeleted).ToString()));
       xReturnValue.Add(new KeyValuePair<string, string>(nameof(AutomobilePartDescription), nameof(AutomobilePartDescription).ToString()));
       xReturnValue.Add(new KeyValuePair<string, string>(nameof(AutomobilePartGUID), nameof(AutomobilePartGUID).ToString()));
       xReturnValue.Add(new KeyValuePair<string, string>(nameof(AutomobilePartName), nameof(AutomobilePartName).ToString()));
@@ -410,6 +411,22 @@ namespace CodeGenSample.Web.Entity
       /// Loads a set of AutomobileParts using the specified Uri and DataRequest.
       /// </summary>
       /// <param name="a_xURI">The database Uri used to perform the action.</param>
+      /// <returns>AutomobilePartWebEntity</returns>
+      public static IEnumerable<AutomobilePartWebEntity> Load(Uri a_xURI)
+      {
+        if (m_xAutomobilePartWebEntity == null)
+          m_xAutomobilePartWebEntity = new AutomobilePartWebEntity();
+
+        return m_xAutomobilePartWebEntity.Load(a_xURI);
+      }
+
+      //=======================================================================
+      //=======================================================================
+
+      /// <summary>
+      /// Loads a set of AutomobileParts using the specified Uri and DataRequest.
+      /// </summary>
+      /// <param name="a_xURI">The database Uri used to perform the action.</param>
       /// <param name="a_xDataRequest">DataRequest that specifies the set of AutomobileParts to be retrieved.</param>
       /// <returns>AutomobilePartWebEntity</returns>
       public static IEnumerable<AutomobilePartWebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest)
@@ -419,7 +436,6 @@ namespace CodeGenSample.Web.Entity
 
         return m_xAutomobilePartWebEntity.Load(a_xURI, a_xDataRequest);
       }
-
 
       //=======================================================================
       //=======================================================================
@@ -485,6 +501,7 @@ namespace CodeGenSample.Web.Entity
     //----- Metadata available for "Entity[AutomobilePartWebEntityDesign]"
     //-----
     //----- AutomobileGUID                           Key = "Entity[AutomobilePartWebEntityDesign].Property[AutomobileGUID]"
+    //----- AutomobilePartDeleted                    Key = "Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartDeleted]"
     //----- AutomobilePartDescription                Key = "Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartDescription]"
     //----- AutomobilePartGUID                       Key = "Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartGUID]"
     //----- AutomobilePartName                       Key = "Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartName]"
@@ -496,6 +513,7 @@ namespace CodeGenSample.Web.Entity
     //----- (TypeAttribute)                          Entity[AutomobilePartWebEntityDesign].Attribute[WebResource] == "True"
     //----- (TypeAttributeProperty)                  Entity[AutomobilePartWebEntityDesign].Attribute[WebResource].Property[Name] == "AutomobilePart"
     //----- (TypeProperty)                           Entity[AutomobilePartWebEntityDesign].Property[AutomobileGUID] == "null"
+    //----- (TypeProperty)                           Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartDeleted] == "null"
     //----- (TypeProperty)                           Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartDescription] == "null"
     //----- (TypeProperty)                           Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartGUID] == "null"
     //----- (TypeProperty)                           Entity[AutomobilePartWebEntityDesign].Property[AutomobilePartName] == "null"
@@ -508,8 +526,8 @@ namespace CodeGenSample.Web.Entity
   }
 }
 
-//**********************************************************************************
-//*                                                                                *
-//* This code was generated from an emFramework Template. DO NOT MODIFY THIS FILE. *
-//*                                                       -----------------------  *
-//**********************************************************************************
+//**************************************************************************************
+//*                                                                                    *
+//* This code was generated from an emFrameworkCore Template. DO NOT MODIFY THIS FILE. *
+//*                                                           -----------------------  *
+//**************************************************************************************
