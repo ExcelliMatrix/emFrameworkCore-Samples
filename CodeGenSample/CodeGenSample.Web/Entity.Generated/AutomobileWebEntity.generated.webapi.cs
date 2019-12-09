@@ -57,12 +57,12 @@ namespace CodeGenSample.Web.Entity
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
-    public HttpResponseMessage WebAPI_Delete(Uri a_xURI, GUID a_xGUID)
+    public HttpResponseMessage WebAPI_Delete(Uri a_xURI, GUID a_xAutomobileGUID)
     {
       HttpResponseMessage xReturnValue = null;
 
       HttpClient xHttpClient = new HttpClient();
-      string sURL = $"{a_xURI}/{a_xGUID}";
+      string sURL = $"{a_xURI}/{a_xAutomobileGUID}";
       xReturnValue = xHttpClient.DeleteAsync(sURL).Result;
 
       return xReturnValue;
@@ -76,7 +76,11 @@ namespace CodeGenSample.Web.Entity
       IEnumerable<AutomobileWebEntity> xAutomobileWebEntities = null;
 
       HttpClient xHTTPClient = new HttpClient();
-      Uri xURI = new Uri(a_xURI, "/api/Automobile");
+      Uri xURI = new Uri(a_xURI, "/api/Automobile/Load");
+      HttpRequestMessage xHTTPRequestMessage = new HttpRequestMessage(HttpMethod.Get, xURI);
+      string sJSON = JsonConvert.SerializeObject(a_xDataRequest);
+      xHTTPRequestMessage.Content = new StringContent(sJSON);
+      xHTTPClient.SendAsync(xHTTPRequestMessage);
       HttpResponseMessage xHTTPResponseMessage = xHTTPClient.GetAsync(xURI).Result;
       if (xHTTPResponseMessage.IsSuccessStatusCode)
       {
@@ -100,12 +104,12 @@ namespace CodeGenSample.Web.Entity
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
-    public AutomobileWebEntity WebAPI_Read(Uri a_xURI, GUID a_xGUID)
+    public AutomobileWebEntity WebAPI_Read(Uri a_xURI, GUID a_xAutomobileGUID)
     {
       AutomobileWebEntity xAutomobileWebEntity = null;
 
       HttpClient xHTTPClient = new HttpClient();
-      Uri xURI = new Uri(a_xURI, $"/api/Automobile/{a_xGUID.GUIDString}");
+      Uri xURI = new Uri(a_xURI, $"/api/Automobile/Read/{a_xAutomobileGUID.GUIDString}");
       HttpResponseMessage xHTTPResponseMessage = xHTTPClient.GetAsync(xURI).Result;
       if (xHTTPResponseMessage.IsSuccessStatusCode)
       {

@@ -52,7 +52,7 @@
 
 namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 {
- public partial class <#=EntityItem.Name#>WebEntity : <#=EntityItem.Name#>WebEntityDesign, IEntity_WebAPIConnection<<#=EntityItem.Name#>WebEntity>
+  public partial class <#=EntityItem.Name#>WebEntity : <#=EntityItem.Name#>WebEntityDesign, IEntity_WebAPIConnection<<#=EntityItem.Name#>WebEntity>
   {
 
     //---------------------------------------------------------------------------------------------
@@ -148,6 +148,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
       try
       {
+        xReturnValue = WebAPI_Read(a_xURI, a_x<#=EntityItem.Name#>GUID);
       }
       catch (Exception xException)
       {
@@ -296,10 +297,14 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     /// <returns><#=EntityItem.Name#>WebEntity</returns>
     public IEnumerable<<#=EntityItem.Name#>WebEntity> Load(Uri a_xURI)
     {
+      IEnumerable<<#=EntityItem.Name#>WebEntity> xReturnValue = null;
+
       DataRequest xDataRequest = DataRequestFactory();
       DataResult xDataResult = new DataResult();
 
-      return Load(a_xURI, xDataRequest, out xDataResult);
+      xReturnValue = Load(a_xURI, xDataRequest, out xDataResult);
+
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -313,14 +318,15 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     /// <returns><#=EntityItem.Name#>WebEntity</returns>
     public IEnumerable<<#=EntityItem.Name#>WebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest)
     {
+      IEnumerable<<#=EntityItem.Name#>WebEntity> xReturnValue = null;
+
       DataResult xDataResult = new DataResult();
-      return Load(a_xURI, a_xDataRequest, out xDataResult);
+      xReturnValue = Load(a_xURI, a_xDataRequest, out xDataResult);
+
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
-<# } #>
-<# if (EntityItem.IncludeMethod("Load")) { 
-#>
     //---------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -333,10 +339,20 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     public IEnumerable<<#=EntityItem.Name#>WebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest, out DataResult a_xDataResult)
     {
       List<<#=EntityItem.Name#>WebEntity> xReturnValue = null;
+
       a_xDataResult = null;
 
       try
       {
+        xReturnValue = WebAPI_Load(a_xURI, a_xDataRequest).ToList();
+
+        a_xDataResult = new DataResult();
+        a_xDataResult.TotalCount = xReturnValue == null ? 0 : xReturnValue.Count;
+        a_xDataResult.DatabaseDateTime = DateTime.Now;
+        a_xDataResult.FilterCount = 0;
+        a_xDataResult.PageCount = 0;
+        a_xDataResult.PageNumber = 0;
+        a_xDataResult.PageSize = 0;
       }
       catch (Exception xException)
       {
@@ -566,10 +582,14 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       /// <returns><#=EntityItem.Name#>WebEntity</returns>
       public static IEnumerable<<#=EntityItem.Name#>WebEntity> Load(Uri a_xURI)
       {
+        IEnumerable<<#=EntityItem.Name#>WebEntity> xReturnValue = null;
+
         if (m_x<#=EntityItem.Name#>WebEntity == null)
           m_x<#=EntityItem.Name#>WebEntity = new <#=EntityItem.Name#>WebEntity();
 
-        return m_x<#=EntityItem.Name#>WebEntity.Load(a_xURI);
+        xReturnValue = m_x<#=EntityItem.Name#>WebEntity.Load(a_xURI);
+
+        return xReturnValue;
       }
 
       //=======================================================================
@@ -601,7 +621,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       /// <returns>IEnumerable<<#=EntityItem.Name#>WebEntity></returns>
       public static IEnumerable<<#=EntityItem.Name#>WebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest, out DataResult a_xDataResult)
       {
-        if (m_x<#=EntityItem.Name#>WebEntity== null)
+        if (m_x<#=EntityItem.Name#>WebEntity == null)
           m_x<#=EntityItem.Name#>WebEntity = new <#=EntityItem.Name#>WebEntity();
 
         return m_x<#=EntityItem.Name#>WebEntity.Load(a_xURI, a_xDataRequest, out a_xDataResult);

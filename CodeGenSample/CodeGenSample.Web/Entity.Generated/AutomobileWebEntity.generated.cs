@@ -24,7 +24,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
+
 
 namespace CodeGenSample.Web.Entity
 {
@@ -139,7 +139,7 @@ namespace CodeGenSample.Web.Entity
       return xReturnValue;
     }
 
-
+    
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
@@ -261,14 +261,14 @@ namespace CodeGenSample.Web.Entity
       DataRequest xDataRequest = DataRequestFactory();
       DataResult xDataResult = new DataResult();
 
-      xReturnValue = Load(a_xURI, xDataRequest, out xDataResult).ToAutomobileWebEntity();
+      xReturnValue = Load(a_xURI, xDataRequest, out xDataResult);
 
       return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
-
+  
     /// <summary>
     /// Loads a set of Automobiles using the specified Uri and DataRequest.
     /// </summary>
@@ -280,7 +280,7 @@ namespace CodeGenSample.Web.Entity
       IEnumerable<AutomobileWebEntity> xReturnValue = null;
 
       DataResult xDataResult = new DataResult();
-      xReturnValue = Load(a_xURI, a_xDataRequest, out xDataResult).ToAutomobileWebEntity();
+      xReturnValue = Load(a_xURI, a_xDataRequest, out xDataResult);
 
       return xReturnValue;
     }
@@ -297,23 +297,21 @@ namespace CodeGenSample.Web.Entity
     /// <returns>IEnumerable<AutomobileWebEntity></returns>
     public IEnumerable<AutomobileWebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest, out DataResult a_xDataResult)
     {
-      IEnumerable<AutomobileWebEntity> xReturnValue = null;
+      List<AutomobileWebEntity> xReturnValue = null;
 
       a_xDataResult = null;
 
       try
       {
-        xReturnValue = WebAPI_Load(a_xURI, a_xDataRequest).ToAutomobileWebEntity();
+        xReturnValue = WebAPI_Load(a_xURI, a_xDataRequest).ToList();
 
-        a_xDataResult = new DataResult()
-        {
-          TotalCount = xReturnValue.Count(),
-          DatabaseDateTime = DateTime.Now,
-          FilterCount = 0,
-          PageCount = 0,
-          PageNumber = 0,
-          PageSize = 0
-        };
+        a_xDataResult = new DataResult();
+        a_xDataResult.TotalCount = xReturnValue == null ? 0 : xReturnValue.Count;
+        a_xDataResult.DatabaseDateTime = DateTime.Now;
+        a_xDataResult.FilterCount = 0;
+        a_xDataResult.PageCount = 0;
+        a_xDataResult.PageNumber = 0;
+        a_xDataResult.PageSize = 0;
       }
       catch (Exception xException)
       {

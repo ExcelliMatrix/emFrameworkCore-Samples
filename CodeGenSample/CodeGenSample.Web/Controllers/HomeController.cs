@@ -17,17 +17,30 @@ namespace CodeGenSample.Web.Controllers
 {
   public class HomeController : Controller
   {
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+
     private readonly ILogger<HomeController> _logger;
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
 
     public HomeController(ILogger<HomeController> logger)
     {
       _logger = logger;
     }
 
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+
     public IActionResult Index()
     {
       return View();
     }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
 
     public IActionResult Automobile()
     {
@@ -36,36 +49,38 @@ namespace CodeGenSample.Web.Controllers
       return View(xAutomobileViewModels);
     }
 
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+
     public IActionResult AutomobileView(string GUIDString)
     {
       AutomobileViewModel xAutomobileViewModel = AutomobileWebEntity.Helper.Read(ApplicationInfo.BaseURI, new GUID(GUIDString)).ToAutomobileViewModel();
-      xAutomobileViewModel.AutomobileParts = new List<AutomobilePartViewModel>();
-      xAutomobileViewModel.AutomobileParts.Add(new AutomobilePartViewModel()
-      {
-        AutomobilePartGUID = new emFrameworkCore.Core.GUID(),
-        AutomobileGUID = xAutomobileViewModel.AutomobileGUID,
-        AutomobilePartNumber = "",
-        AutomobilePartName = "",
-        AutomobilePartPrice = 0m,
-        AutomobilePartDescription = ""
-      });
-      xAutomobileViewModel.AutomobileParts.Add(new AutomobilePartViewModel()
-      {
-        AutomobilePartGUID = new emFrameworkCore.Core.GUID(),
-        AutomobileGUID = xAutomobileViewModel.AutomobileGUID,
-        AutomobilePartNumber = "",
-        AutomobilePartName = "",
-        AutomobilePartPrice = 0m,
-        AutomobilePartDescription = ""
-      });
+      xAutomobileViewModel.AutomobileParts = AutomobilePartWebEntity.Helper.Load_ByAutomobileGUID(ApplicationInfo.BaseURI, new GUID(GUIDString)).ToAutomobilePartViewModel()?.ToList();
 
       return View(xAutomobileViewModel);
     }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+
+    public IActionResult AutomobilePartView(string GUIDString)
+    {
+      AutomobilePartViewModel xAutomobilePartViewModel = null;
+
+      return View(xAutomobilePartViewModel);
+    }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
       return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+
   }
 }

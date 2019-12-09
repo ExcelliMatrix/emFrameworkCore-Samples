@@ -51,8 +51,8 @@
 
 namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 {
-   public partial class <#=EntityItem.Name#>WebEntity
-   {
+  public partial class <#=EntityItem.Name#>WebEntity
+  {
     //---------------------------------------------------------------------------------------------
 <# if (EntityItem.IncludeMethod("WebAPI_Create")) { 
 #>    //---------------------------------------------------------------------------------------------
@@ -84,12 +84,12 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
-    public HttpResponseMessage WebAPI_Delete(Uri a_xURI, GUID a_xGUID)
+    public HttpResponseMessage WebAPI_Delete(Uri a_xURI, GUID a_x<#=EntityItem.Name#>GUID)
     {
       HttpResponseMessage xReturnValue = null;
 
       HttpClient xHttpClient = new HttpClient();
-      string sURL = $"{a_xURI}/{a_xGUID}";
+      string sURL = $"{a_xURI}/{a_x<#=EntityItem.Name#>GUID}";
       xReturnValue = xHttpClient.DeleteAsync(sURL).Result;
 
       return xReturnValue;
@@ -100,15 +100,24 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 <# if (EntityItem.IncludeMethod("WebAPI_Load")) { 
 #>    //---------------------------------------------------------------------------------------------
 
-    public HttpResponseMessage WebAPI_Load(Uri a_xURI, DataRequest a_xDataRequest)
+    public IEnumerable<<#=EntityItem.Name#>WebEntity> WebAPI_Load(Uri a_xURI, DataRequest a_xDataRequest)
     {
-      HttpResponseMessage xReturnValue = null;
+      IEnumerable<<#=EntityItem.Name#>WebEntity> x<#=EntityItem.Name#>WebEntities = null;
 
       HttpClient xHTTPClient = new HttpClient();
-      Uri xURI = new Uri(a_xURI, "/api/<#=EntityItem.Name#>");
-      xReturnValue = xHTTPClient.GetAsync(xURI).Result;
+      Uri xURI = new Uri(a_xURI, "/api/<#=EntityItem.Name#>/Load");
+      HttpRequestMessage xHTTPRequestMessage = new HttpRequestMessage(HttpMethod.Get, xURI);
+      string sJSON = JsonConvert.SerializeObject(a_xDataRequest);
+      xHTTPRequestMessage.Content = new StringContent(sJSON);
+      xHTTPClient.SendAsync(xHTTPRequestMessage);
+      HttpResponseMessage xHTTPResponseMessage = xHTTPClient.GetAsync(xURI).Result;
+      if (xHTTPResponseMessage.IsSuccessStatusCode)
+      {
+        string sResult = xHTTPResponseMessage.Content.ReadAsStringAsync().Result;
+        x<#=EntityItem.Name#>WebEntities = JsonConvert.DeserializeObject<IEnumerable<<#=EntityItem.Name#>WebEntity>>(sResult);
+      }
 
-      return xReturnValue;
+      return x<#=EntityItem.Name#>WebEntities;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -116,9 +125,9 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 <# if (EntityItem.IncludeMethod("WebAPI_Read")) {
 #>    //---------------------------------------------------------------------------------------------
 
-    public HttpResponseMessage WebAPI_Read(Uri a_xURI)
+    public <#=EntityItem.Name#>WebEntity WebAPI_Read(Uri a_xURI)
     {
-      HttpResponseMessage xReturnValue = WebAPI_Read(a_xURI, <#=EntityItem.Name#>GUID);
+      <#=EntityItem.Name#>WebEntity xReturnValue = WebAPI_Read(a_xURI, <#=EntityItem.Name#>GUID);
 
       return xReturnValue;
     }
@@ -126,15 +135,20 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
-    public HttpResponseMessage WebAPI_Read(Uri a_xURI, GUID a_xGUID)
+    public <#=EntityItem.Name#>WebEntity WebAPI_Read(Uri a_xURI, GUID a_x<#=EntityItem.Name#>GUID)
     {
-      HttpResponseMessage xReturnValue = null;
+      <#=EntityItem.Name#>WebEntity x<#=EntityItem.Name#>WebEntity = null;
 
-      HttpClient xHttpClient = new HttpClient();
-      string sURL = $"{a_xURI}/{a_xGUID}";
-      xReturnValue = xHttpClient.DeleteAsync(sURL).Result;
+      HttpClient xHTTPClient = new HttpClient();
+      Uri xURI = new Uri(a_xURI, $"/api/<#=EntityItem.Name#>/Read/{a_x<#=EntityItem.Name#>GUID.GUIDString}");
+      HttpResponseMessage xHTTPResponseMessage = xHTTPClient.GetAsync(xURI).Result;
+      if (xHTTPResponseMessage.IsSuccessStatusCode)
+      {
+        string sResult = xHTTPResponseMessage.Content.ReadAsStringAsync().Result;
+        x<#=EntityItem.Name#>WebEntity = JsonConvert.DeserializeObject<<#=EntityItem.Name#>WebEntity>(sResult);
+      }
 
-      return xReturnValue;
+      return x<#=EntityItem.Name#>WebEntity;
     }
 
     //---------------------------------------------------------------------------------------------

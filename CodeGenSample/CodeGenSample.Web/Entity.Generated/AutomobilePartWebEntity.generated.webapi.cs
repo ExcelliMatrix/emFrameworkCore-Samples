@@ -13,6 +13,7 @@
 // CodeGenFilename:  (CodeGen.WebAPI).xml
 // TemplateFilename: (Entity.WebAPI).tt
 
+using CodeGenSample.Design;
 using CodeGenSample.Design.Web;
 using CodeGenSample.WebTier;
 using emFrameworkCore.Core;
@@ -26,8 +27,8 @@ using System.Net.Http;
 
 namespace CodeGenSample.Web.Entity
 {
-   public partial class AutomobilePartWebEntity
-   {
+  public partial class AutomobilePartWebEntity
+  {
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
@@ -56,12 +57,12 @@ namespace CodeGenSample.Web.Entity
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
-    public HttpResponseMessage WebAPI_Delete(Uri a_xURI, GUID a_xGUID)
+    public HttpResponseMessage WebAPI_Delete(Uri a_xURI, GUID a_xAutomobilePartGUID)
     {
       HttpResponseMessage xReturnValue = null;
 
       HttpClient xHttpClient = new HttpClient();
-      string sURL = $"{a_xURI}/{a_xGUID}";
+      string sURL = $"{a_xURI}/{a_xAutomobilePartGUID}";
       xReturnValue = xHttpClient.DeleteAsync(sURL).Result;
 
       return xReturnValue;
@@ -70,13 +71,32 @@ namespace CodeGenSample.Web.Entity
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
-    public HttpResponseMessage WebAPI_Load(Uri a_xURI, DataRequest a_xDataRequest)
+    public IEnumerable<AutomobilePartWebEntity> WebAPI_Load(Uri a_xURI, DataRequest a_xDataRequest)
     {
-      HttpResponseMessage xReturnValue = null;
+      IEnumerable<AutomobilePartWebEntity> xAutomobilePartWebEntities = null;
 
       HttpClient xHTTPClient = new HttpClient();
-      Uri xURI = new Uri(a_xURI, "/api/AutomobilePart");
-      xReturnValue = xHTTPClient.GetAsync(xURI).Result;
+      Uri xURI = new Uri(a_xURI, "/api/AutomobilePart/Load");
+      HttpRequestMessage xHTTPRequestMessage = new HttpRequestMessage(HttpMethod.Get, xURI);
+      string sJSON = JsonConvert.SerializeObject(a_xDataRequest);
+      xHTTPRequestMessage.Content = new StringContent(sJSON);
+      xHTTPClient.SendAsync(xHTTPRequestMessage);
+      HttpResponseMessage xHTTPResponseMessage = xHTTPClient.GetAsync(xURI).Result;
+      if (xHTTPResponseMessage.IsSuccessStatusCode)
+      {
+        string sResult = xHTTPResponseMessage.Content.ReadAsStringAsync().Result;
+        xAutomobilePartWebEntities = JsonConvert.DeserializeObject<IEnumerable<AutomobilePartWebEntity>>(sResult);
+      }
+
+      return xAutomobilePartWebEntities;
+    }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+
+    public AutomobilePartWebEntity WebAPI_Read(Uri a_xURI)
+    {
+      AutomobilePartWebEntity xReturnValue = WebAPI_Read(a_xURI, AutomobilePartGUID);
 
       return xReturnValue;
     }
@@ -84,25 +104,20 @@ namespace CodeGenSample.Web.Entity
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
-    public HttpResponseMessage WebAPI_Read(Uri a_xURI)
+    public AutomobilePartWebEntity WebAPI_Read(Uri a_xURI, GUID a_xAutomobilePartGUID)
     {
-      HttpResponseMessage xReturnValue = WebAPI_Read(a_xURI, AutomobilePartGUID);
+      AutomobilePartWebEntity xAutomobilePartWebEntity = null;
 
-      return xReturnValue;
-    }
+      HttpClient xHTTPClient = new HttpClient();
+      Uri xURI = new Uri(a_xURI, $"/api/AutomobilePart/Read/{a_xAutomobilePartGUID.GUIDString}");
+      HttpResponseMessage xHTTPResponseMessage = xHTTPClient.GetAsync(xURI).Result;
+      if (xHTTPResponseMessage.IsSuccessStatusCode)
+      {
+        string sResult = xHTTPResponseMessage.Content.ReadAsStringAsync().Result;
+        xAutomobilePartWebEntity = JsonConvert.DeserializeObject<AutomobilePartWebEntity>(sResult);
+      }
 
-    //---------------------------------------------------------------------------------------------
-    //---------------------------------------------------------------------------------------------
-
-    public HttpResponseMessage WebAPI_Read(Uri a_xURI, GUID a_xGUID)
-    {
-      HttpResponseMessage xReturnValue = null;
-
-      HttpClient xHttpClient = new HttpClient();
-      string sURL = $"{a_xURI}/{a_xGUID}";
-      xReturnValue = xHttpClient.DeleteAsync(sURL).Result;
-
-      return xReturnValue;
+      return xAutomobilePartWebEntity;
     }
 
     //---------------------------------------------------------------------------------------------

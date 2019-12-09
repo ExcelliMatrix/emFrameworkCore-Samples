@@ -1,0 +1,16 @@
+﻿@using CodeGenSample.WebTier.Models
+@model AutomobilePartViewModel
+@{
+  ViewData["Title"] = "Home/AutomobilePartView";
+}
+
+  <div class="text-center">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+    <p>List of automobile currently in the database. The Web-Tier CodeGenSample.Web applicaiton makes a RESTful request to the App-Tier CodeGenSample.App application which then executes a database query.</p>
+
+    <p><b>Part Number:</b> @Model.AutomobilePartNumber</p>
+    <p><b>Name:</b> @Model.AutomobilePartName</p>
+    <p><b>Price:</b> @Model.AutomobilePartPrice.ToString("C")</p>
+    <p><b>Description:</b> @Model.AutomobilePartDescription</p>
+
+  </div>

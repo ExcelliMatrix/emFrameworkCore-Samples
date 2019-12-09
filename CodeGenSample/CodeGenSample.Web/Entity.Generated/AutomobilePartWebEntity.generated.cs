@@ -14,7 +14,9 @@
 // CodeGenFilename:  (CodeGen).xml
 // TemplateFilename: (Entity).tt
 
+using CodeGenSample.Design;
 using CodeGenSample.Design.Web;
+using CodeGenSample.Web.Entity.Extensions;
 using CodeGenSample.WebTier;
 using emFrameworkCore.Core;
 using emFrameworkCore.Data;
@@ -26,7 +28,7 @@ using System.Linq;
 
 namespace CodeGenSample.Web.Entity
 {
- public partial class AutomobilePartWebEntity : AutomobilePartWebEntityDesign, IEntity_WebAPIConnection<AutomobilePartWebEntity>
+  public partial class AutomobilePartWebEntity : AutomobilePartWebEntityDesign, IEntity_WebAPIConnection<AutomobilePartWebEntity>
   {
 
     //---------------------------------------------------------------------------------------------
@@ -117,6 +119,7 @@ namespace CodeGenSample.Web.Entity
 
       try
       {
+        xReturnValue = WebAPI_Read(a_xURI, a_xAutomobilePartGUID);
       }
       catch (Exception xException)
       {
@@ -253,10 +256,14 @@ namespace CodeGenSample.Web.Entity
     /// <returns>AutomobilePartWebEntity</returns>
     public IEnumerable<AutomobilePartWebEntity> Load(Uri a_xURI)
     {
+      IEnumerable<AutomobilePartWebEntity> xReturnValue = null;
+
       DataRequest xDataRequest = DataRequestFactory();
       DataResult xDataResult = new DataResult();
 
-      return Load(a_xURI, xDataRequest, out xDataResult);
+      xReturnValue = Load(a_xURI, xDataRequest, out xDataResult);
+
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -270,8 +277,12 @@ namespace CodeGenSample.Web.Entity
     /// <returns>AutomobilePartWebEntity</returns>
     public IEnumerable<AutomobilePartWebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest)
     {
+      IEnumerable<AutomobilePartWebEntity> xReturnValue = null;
+
       DataResult xDataResult = new DataResult();
-      return Load(a_xURI, a_xDataRequest, out xDataResult);
+      xReturnValue = Load(a_xURI, a_xDataRequest, out xDataResult);
+
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -287,10 +298,20 @@ namespace CodeGenSample.Web.Entity
     public IEnumerable<AutomobilePartWebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest, out DataResult a_xDataResult)
     {
       List<AutomobilePartWebEntity> xReturnValue = null;
+
       a_xDataResult = null;
 
       try
       {
+        xReturnValue = WebAPI_Load(a_xURI, a_xDataRequest).ToList();
+
+        a_xDataResult = new DataResult();
+        a_xDataResult.TotalCount = xReturnValue == null ? 0 : xReturnValue.Count;
+        a_xDataResult.DatabaseDateTime = DateTime.Now;
+        a_xDataResult.FilterCount = 0;
+        a_xDataResult.PageCount = 0;
+        a_xDataResult.PageNumber = 0;
+        a_xDataResult.PageSize = 0;
       }
       catch (Exception xException)
       {
@@ -414,10 +435,14 @@ namespace CodeGenSample.Web.Entity
       /// <returns>AutomobilePartWebEntity</returns>
       public static IEnumerable<AutomobilePartWebEntity> Load(Uri a_xURI)
       {
+        IEnumerable<AutomobilePartWebEntity> xReturnValue = null;
+
         if (m_xAutomobilePartWebEntity == null)
           m_xAutomobilePartWebEntity = new AutomobilePartWebEntity();
 
-        return m_xAutomobilePartWebEntity.Load(a_xURI);
+        xReturnValue = m_xAutomobilePartWebEntity.Load(a_xURI);
+
+        return xReturnValue;
       }
 
       //=======================================================================
@@ -449,7 +474,7 @@ namespace CodeGenSample.Web.Entity
       /// <returns>IEnumerable<AutomobilePartWebEntity></returns>
       public static IEnumerable<AutomobilePartWebEntity> Load(Uri a_xURI, DataRequest a_xDataRequest, out DataResult a_xDataResult)
       {
-        if (m_xAutomobilePartWebEntity== null)
+        if (m_xAutomobilePartWebEntity == null)
           m_xAutomobilePartWebEntity = new AutomobilePartWebEntity();
 
         return m_xAutomobilePartWebEntity.Load(a_xURI, a_xDataRequest, out a_xDataResult);

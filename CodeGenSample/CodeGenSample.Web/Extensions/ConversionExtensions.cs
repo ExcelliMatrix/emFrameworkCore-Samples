@@ -8,6 +8,7 @@ namespace CodeGenSample.Web.Entity.Extensions
 {
   public static class ConversionExtensions
   {
+
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
@@ -60,5 +61,41 @@ namespace CodeGenSample.Web.Entity.Extensions
 
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
+
+    public static IEnumerable<AutomobilePartViewModel> ToAutomobilePartViewModel(this IEnumerable<IAutomobilePartEntityDesign> a_xAutomobilePartEntityDesigns)
+    {
+      List<AutomobilePartViewModel> xReturnValue = null;
+
+      if (a_xAutomobilePartEntityDesigns != null)
+      {
+        xReturnValue = new List<AutomobilePartViewModel>();
+        foreach (AutomobilePartWebEntity xAutomobilePartWebEntity in a_xAutomobilePartEntityDesigns)
+          xReturnValue.Add(xAutomobilePartWebEntity.ToAutomobilePartViewModel());
+      }
+
+      return xReturnValue;
+    }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+
+    public static AutomobilePartViewModel ToAutomobilePartViewModel(this IAutomobilePartEntityDesign a_xAutomobilePartEntityDesign)
+    {
+      AutomobilePartViewModel xReturnValue = new AutomobilePartViewModel()
+      {
+        AutomobilePartGUID = a_xAutomobilePartEntityDesign.AutomobilePartGUID,
+        AutomobilePartNumber = a_xAutomobilePartEntityDesign.AutomobilePartNumber,
+        AutomobilePartName = a_xAutomobilePartEntityDesign.AutomobilePartName,
+        AutomobilePartPrice = a_xAutomobilePartEntityDesign.AutomobilePartPrice,
+        AutomobilePartDescription = a_xAutomobilePartEntityDesign.AutomobilePartDescription,
+        AutomobileGUID = a_xAutomobilePartEntityDesign.AutomobileGUID
+      };
+
+      return xReturnValue;
+    }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+
   }
 }
