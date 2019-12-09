@@ -80,7 +80,6 @@ namespace CodeGenSample.Web.Entity
       HttpRequestMessage xHTTPRequestMessage = new HttpRequestMessage(HttpMethod.Get, xURI);
       string sJSON = JsonConvert.SerializeObject(a_xDataRequest);
       xHTTPRequestMessage.Content = new StringContent(sJSON);
-      xHTTPClient.SendAsync(xHTTPRequestMessage);
       HttpResponseMessage xHTTPResponseMessage = xHTTPClient.GetAsync(xURI).Result;
       if (xHTTPResponseMessage.IsSuccessStatusCode)
       {
