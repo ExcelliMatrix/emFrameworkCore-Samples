@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CodeGenSample.AppTier.Controllers
 {
+  [Route("[controller]")]
   [Route("api/[controller]")]
   [ApiController]
   public partial class AutomobileController : ControllerBase

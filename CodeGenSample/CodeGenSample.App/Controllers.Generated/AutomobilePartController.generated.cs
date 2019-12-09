@@ -20,7 +20,13 @@ namespace CodeGenSample.AppTier.Controllers
     [HttpGet("Load")]
     public IEnumerable<AutomobilePartAppEntity> Load()
     {
-      IEnumerable<AutomobilePartAppEntity> xAutomobileAppEntities = AutomobilePartAppEntity.Helper.Load(ApplicationInfo.SQLConnection);
+      DataRequest xDataRequest = new DataRequest()
+      {
+        DeleteColumnName = "AutomobilePartDeleted",
+        ShowDeletedRow = false
+      };
+      DataResult xDataResult = new DataResult();
+      IEnumerable<AutomobilePartAppEntity> xAutomobileAppEntities = AutomobilePartAppEntity.Helper.Load(ApplicationInfo.SQLConnection, xDataRequest, out xDataResult);
 
       return xAutomobileAppEntities;
     }
@@ -31,7 +37,8 @@ namespace CodeGenSample.AppTier.Controllers
     [HttpPost("Load")]
     public IEnumerable<AutomobilePartAppEntity> Load(DataRequest a_xDataRequest)
     {
-      IEnumerable<AutomobilePartAppEntity> xAutomobilePartAppEntity = AutomobilePartAppEntity.Helper.Load(ApplicationInfo.SQLConnection, a_xDataRequest);
+      DataResult xDataResult = new DataResult();
+      IEnumerable<AutomobilePartAppEntity> xAutomobilePartAppEntity = AutomobilePartAppEntity.Helper.Load(ApplicationInfo.SQLConnection, a_xDataRequest, out xDataResult);
 
       return xAutomobilePartAppEntity;
     }
