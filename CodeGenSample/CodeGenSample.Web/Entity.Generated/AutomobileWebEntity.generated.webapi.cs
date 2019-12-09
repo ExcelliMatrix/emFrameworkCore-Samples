@@ -73,7 +73,7 @@ namespace CodeGenSample.Web.Entity
 
     public IEnumerable<AutomobileWebEntity> WebAPI_Load(Uri a_xURI, DataRequest a_xDataRequest)
     {
-      IEnumerable<AutomobileWebEntity> xAutomobileWebEntities = null;
+      WebAPIResult<IEnumerable<AutomobileWebEntity>> xResultValue = new WebAPIResult<IEnumerable<AutomobileWebEntity>>();
 
       HttpClient xHTTPClient = new HttpClient();
       Uri xURI = new Uri(a_xURI, "/api/Automobile/Load");
@@ -84,10 +84,10 @@ namespace CodeGenSample.Web.Entity
       if (xHTTPResponseMessage.IsSuccessStatusCode)
       {
         string sResult = xHTTPResponseMessage.Content.ReadAsStringAsync().Result;
-        xAutomobileWebEntities = JsonConvert.DeserializeObject<IEnumerable<AutomobileWebEntity>>(sResult);
+        xResultValue = JsonConvert.DeserializeObject<WebAPIResult<IEnumerable<AutomobileWebEntity>>>(sResult);
       }
 
-      return xAutomobileWebEntities;
+      return xResultValue.Result;
     }
 
     //---------------------------------------------------------------------------------------------

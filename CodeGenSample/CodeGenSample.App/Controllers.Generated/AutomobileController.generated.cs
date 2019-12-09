@@ -18,29 +18,35 @@ namespace CodeGenSample.AppTier.Controllers
     //---------------------------------------------------------------------------------------------
 
     [HttpGet("Load")]
-    public IEnumerable<AutomobileAppEntity> Load()
+    public WebAPIResult<IEnumerable<AutomobileAppEntity>> Load()
     {
+      WebAPIResult<IEnumerable<AutomobileAppEntity>> xReturnValue = new WebAPIResult<IEnumerable<AutomobileAppEntity>>();
+
       DataRequest xDataRequest = new DataRequest()
       {
         DeleteColumnName = "AutomobileDeleted",
         ShowDeletedRow = false
       };
       DataResult xDataResult = new DataResult();
-      IEnumerable<AutomobileAppEntity> xAutomobileAppEntities = AutomobileAppEntity.Helper.Load(ApplicationInfo.SQLConnection, xDataRequest, out xDataResult);
+      xReturnValue.Result = AutomobileAppEntity.Helper.Load(ApplicationInfo.SQLConnection, xDataRequest, out xDataResult);
+      xReturnValue.DataResult = xDataResult;
 
-      return xAutomobileAppEntities;
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
     [HttpPost("Load")]
-    public IEnumerable<AutomobileAppEntity> Load(DataRequest a_xDataRequest)
+    public WebAPIResult<IEnumerable<AutomobileAppEntity>> Load(DataRequest a_xDataRequest)
     {
-      DataResult xDataResult = new DataResult();
-      IEnumerable<AutomobileAppEntity> xAutomobileAppEntity = AutomobileAppEntity.Helper.Load(ApplicationInfo.SQLConnection, a_xDataRequest, out xDataResult);
+      WebAPIResult<IEnumerable<AutomobileAppEntity>> xReturnValue = new WebAPIResult<IEnumerable<AutomobileAppEntity>>();
 
-      return xAutomobileAppEntity;
+      DataResult xDataResult = new DataResult();
+      xReturnValue.Result = AutomobileAppEntity.Helper.Load(ApplicationInfo.SQLConnection, a_xDataRequest, out xDataResult);
+      xReturnValue.DataResult = xDataResult;
+
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------

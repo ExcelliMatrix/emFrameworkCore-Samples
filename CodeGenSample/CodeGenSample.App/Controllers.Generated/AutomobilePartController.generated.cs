@@ -18,29 +18,35 @@ namespace CodeGenSample.AppTier.Controllers
     //---------------------------------------------------------------------------------------------
 
     [HttpGet("Load")]
-    public IEnumerable<AutomobilePartAppEntity> Load()
+    public WebAPIResult<IEnumerable<AutomobilePartAppEntity>> Load()
     {
+      WebAPIResult<IEnumerable<AutomobilePartAppEntity>> xReturnValue = new WebAPIResult<IEnumerable<AutomobilePartAppEntity>>();
+
       DataRequest xDataRequest = new DataRequest()
       {
         DeleteColumnName = "AutomobilePartDeleted",
         ShowDeletedRow = false
       };
       DataResult xDataResult = new DataResult();
-      IEnumerable<AutomobilePartAppEntity> xAutomobileAppEntities = AutomobilePartAppEntity.Helper.Load(ApplicationInfo.SQLConnection, xDataRequest, out xDataResult);
+      xReturnValue.Result = AutomobilePartAppEntity.Helper.Load(ApplicationInfo.SQLConnection, xDataRequest, out xDataResult);
+      xReturnValue.DataResult = xDataResult;
 
-      return xAutomobileAppEntities;
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
 
     [HttpPost("Load")]
-    public IEnumerable<AutomobilePartAppEntity> Load(DataRequest a_xDataRequest)
+    public WebAPIResult<IEnumerable<AutomobilePartAppEntity>> Load(DataRequest a_xDataRequest)
     {
-      DataResult xDataResult = new DataResult();
-      IEnumerable<AutomobilePartAppEntity> xAutomobilePartAppEntity = AutomobilePartAppEntity.Helper.Load(ApplicationInfo.SQLConnection, a_xDataRequest, out xDataResult);
+      WebAPIResult<IEnumerable<AutomobilePartAppEntity>> xReturnValue = new WebAPIResult<IEnumerable<AutomobilePartAppEntity>>();
 
-      return xAutomobilePartAppEntity;
+      DataResult xDataResult = new DataResult();
+      xReturnValue.Result = AutomobilePartAppEntity.Helper.Load(ApplicationInfo.SQLConnection, a_xDataRequest, out xDataResult);
+      xReturnValue.DataResult = xDataResult;
+
+      return xReturnValue;
     }
 
     //---------------------------------------------------------------------------------------------

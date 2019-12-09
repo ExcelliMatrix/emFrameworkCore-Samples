@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CodeGenSample.Design.Web\2.CodeGenSample.Design.Web.csproj" />
+    <ProjectReference Include="..\CodeGenSample\0.CodeGenSample.csproj" />
   </ItemGroup>
 
   <ItemGroup>

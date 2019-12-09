@@ -102,7 +102,7 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
 
     public IEnumerable<<#=EntityItem.Name#>WebEntity> WebAPI_Load(Uri a_xURI, DataRequest a_xDataRequest)
     {
-      IEnumerable<<#=EntityItem.Name#>WebEntity> x<#=EntityItem.Name#>WebEntities = null;
+      WebAPIResult<IEnumerable<<#=EntityItem.Name#>WebEntity>> xResultValue = new WebAPIResult<IEnumerable<<#=EntityItem.Name#>WebEntity>>();
 
       HttpClient xHTTPClient = new HttpClient();
       Uri xURI = new Uri(a_xURI, "/api/<#=EntityItem.Name#>/Load");
@@ -113,10 +113,10 @@ namespace <#=emT4.GetDictionaryEntry("ClassNamespace")#>
       if (xHTTPResponseMessage.IsSuccessStatusCode)
       {
         string sResult = xHTTPResponseMessage.Content.ReadAsStringAsync().Result;
-        x<#=EntityItem.Name#>WebEntities = JsonConvert.DeserializeObject<IEnumerable<<#=EntityItem.Name#>WebEntity>>(sResult);
+        xResultValue = JsonConvert.DeserializeObject<WebAPIResult<IEnumerable<<#=EntityItem.Name#>WebEntity>>>(sResult);
       }
 
-      return x<#=EntityItem.Name#>WebEntities;
+      return xResultValue.Result;
     }
 
     //---------------------------------------------------------------------------------------------
