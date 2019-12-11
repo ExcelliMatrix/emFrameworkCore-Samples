@@ -13,3 +13,22 @@ Notes:
 - Reflection provides for the implementation of amazingly rich applications; with some impact to application performance.
 - Design-time generated code provides for some positive performance benefits, but reducing run-time flexability.
 - This CodeGenSample focuses on the benefits of design-time code generation as a alternative solution.
+
+##Setup:
+The following will walk you through the process of getting this sample running on your local development workstation in addition to providing you with information about what is needed compile and run the sample.
+
+###Requirements:
+- Visual Studio 2019 v16.4.0+ (.Net Core 3.1+)
+  Visual Studio 2019 "Community Edition" should work, but the team has not tried using the Community Edition. Our team primarily uses Visual Studio 2019 "Professional Edition".
+  - Workloads (minimum):
+    - ASP.NET and web development
+    - Data storage and processing
+    - .NET Core cross-platform development
+- LocalDB
+
+###Cloning the repository
+- Launch Visual Studio 2019
+- Select the "Clone" option
+  {image here}
+- Use the following local computer path and GitHub URL.
+
