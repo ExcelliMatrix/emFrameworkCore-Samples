@@ -195,6 +195,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{CC169C12-E721-4A58-A06C-D4E9020152D6}"
 	ProjectSection(SolutionItems) = preProject
+		images\Setup-Template01.png = images\Setup-Template01.png
+		images\Setup-Template02.png = images\Setup-Template02.png
 		images\Setup-VS01.png = images\Setup-VS01.png
 		images\Setup-VS02.png = images\Setup-VS02.png
 		images\Setup-VS03.png = images\Setup-VS03.png
