@@ -14,10 +14,10 @@ Notes:
 - Design-time generated code provides for some positive performance benefits, but reducing run-time flexability.
 - This CodeGenSample focuses on the benefits of design-time code generation as a alternative solution.
 
-##Setup:
+## Setup:
 The following will walk you through the process of getting this sample running on your local development workstation in addition to providing you with information about what is needed compile and run the sample.
 
-###Requirements:
+### Requirements:
 - Visual Studio 2019 v16.4.0+ (.Net Core 3.1+)
   Tested with the following:
     - Visual Studio 2019 "Community Edition"
@@ -29,7 +29,7 @@ The following will walk you through the process of getting this sample running o
 
 - LocalDB
 
-###Cloning the repository
+### Cloning the repository
 - Launch Visual Studio 2019
 - Select the "Clone" option
   {image here}
