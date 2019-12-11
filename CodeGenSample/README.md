@@ -55,3 +55,11 @@ The following will walk you through the process of getting this sample running o
 - You should see two browser windows.
   ![Image 10](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-VS10.png)
 
+## Code Generation
+The process of code generation, using emFrameworkCode.CodeGen is based on T4 templates executing within a Visual Studio contexts and thereby being aware of the solutions and projects loaded into Visual Studio. By default when a T4 template is changed/saved Visual Studio will prompt you to execute the template; DO NOT execute this way. It will not cause issues, but will result in execution errors.
+
+To execute a T4 template designed to make use of the emFrameworkCore.CodeGen library perform the following:
+1. Save your solution (Ctrl-S). If prompted as follows select the "Cancel" option.
+
+2. Right click on the T4 template you wish to execute.
+3. Select ""
