@@ -19,11 +19,14 @@ The following will walk you through the process of getting this sample running o
 
 ###Requirements:
 - Visual Studio 2019 v16.4.0+ (.Net Core 3.1+)
-  Visual Studio 2019 "Community Edition" should work, but the team has not tried using the Community Edition. Our team primarily uses Visual Studio 2019 "Professional Edition".
+  Tested with the following:
+    - Visual Studio 2019 "Community Edition"
+    - Visual Studio 2019 "Professional Edition"
   - Workloads (minimum):
-    - ASP.NET and web development
+    - ASP .NET and web development
     - Data storage and processing
     - .NET Core cross-platform development
+
 - LocalDB
 
 ###Cloning the repository
