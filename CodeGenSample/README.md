@@ -33,7 +33,7 @@ The following will walk you through the process of getting this sample running o
 ### Cloning the Repository
 - Launch Visual Studio 2019
 - Select the "Clone" option
-  {image here}
+  ![Image 01](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-VS01.png)
 - Use the following local computer path and GitHub URL.
   - Repository Location = https://github.com/ExcelliMatrix/emFrameworkCore-Samples.git
   - Local Path = C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\
