@@ -193,6 +193,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{CC169C12-E721-4A58-A06C-D4E9020152D6}"
+	ProjectSection(SolutionItems) = preProject
+		images\Setup-VS01.png = images\Setup-VS01.png
+		images\Setup-VS02.png = images\Setup-VS02.png
+		images\Setup-VS03.png = images\Setup-VS03.png
+		images\Setup-VS04.png = images\Setup-VS04.png
+		images\Setup-VS05.png = images\Setup-VS05.png
+		images\Setup-VS06.png = images\Setup-VS06.png
+		images\Setup-VS07.png = images\Setup-VS07.png
+		images\Setup-VS08.png = images\Setup-VS08.png
+		images\Setup-VS09.png = images\Setup-VS09.png
+		images\Setup-VS10.png = images\Setup-VS10.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -226,6 +240,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CC169C12-E721-4A58-A06C-D4E9020152D6} = {958C0A73-F964-4DC8-B0B7-51AC09E0E555}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4D260CA-D739-4621-9CF5-9106D42CA01C}

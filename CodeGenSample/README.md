@@ -35,4 +35,6 @@ The following will walk you through the process of getting this sample running o
 - Select the "Clone" option
   {image here}
 - Use the following local computer path and GitHub URL.
+  - Repository Location = https://github.com/ExcelliMatrix/emFrameworkCore-Samples.git
+  - Local Path = C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\
 
