@@ -197,6 +197,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{CC169C
 	ProjectSection(SolutionItems) = preProject
 		images\Setup-Template01.png = images\Setup-Template01.png
 		images\Setup-Template02.png = images\Setup-Template02.png
+		images\Setup-Template03.png = images\Setup-Template03.png
 		images\Setup-VS01.png = images\Setup-VS01.png
 		images\Setup-VS02.png = images\Setup-VS02.png
 		images\Setup-VS03.png = images\Setup-VS03.png
