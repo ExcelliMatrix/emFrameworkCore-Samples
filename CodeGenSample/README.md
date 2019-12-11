@@ -23,7 +23,7 @@ The following will walk you through the process of getting this sample running o
   Tested with the following:
     - Visual Studio 2019 "Community Edition"
     - Visual Studio 2019 "Professional Edition"
-  - Workloads (minimum):
+  - Installed Visual Studio Workloads (minimum):
     - ASP .NET and web development
     - Data storage and processing
     - .NET Core cross-platform development
