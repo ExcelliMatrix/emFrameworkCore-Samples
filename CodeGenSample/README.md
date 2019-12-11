@@ -60,6 +60,8 @@ The process of code generation, using emFrameworkCode.CodeGen is based on T4 tem
 
 To execute a T4 template designed to make use of the emFrameworkCore.CodeGen library perform the following:
 1. Save your solution (Ctrl-S). If prompted as follows select the "Cancel" option.
-
-2. Right click on the T4 template you wish to execute.
-3. Select ""
+  ![Image 11](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-Template01.png)
+2. Right click on the T4 template you wish to execute and select "Debug T4 Template"
+  ![Image 11](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-Template02.png)
+3. Click "Okay" to execute the template.
+  ![Image 11](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-Template03.png)
