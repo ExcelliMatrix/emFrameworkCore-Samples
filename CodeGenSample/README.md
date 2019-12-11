@@ -35,6 +35,23 @@ The following will walk you through the process of getting this sample running o
 - Select the "Clone" option
   ![Image 01](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-VS01.png)
 - Use the following local computer path and GitHub URL.
+  ![Image 02](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-VS02.png)
   - Repository Location = https://github.com/ExcelliMatrix/emFrameworkCore-Samples.git
   - Local Path = C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\
+- Switch Views and Select "CodeGenSample.sln"
+  ![Image 03](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-VS03.png)
+  ![Image 04](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-VS04.png)
+- Rebuild Solution
+  ![Image 05](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-VS05.png)
+- Confirm all project build successfully
+  ![Image 06](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-VS06.png)
+- Change the startup settings for the solution.
+  ![Image 07](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-VS07.png)
+- Make the "CodeGenSample.App" and "CodeGenSample.Web" the first two projects and set them to "Start"
+  ![Image 08](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-VS08.png)
+- Start the application
+  ![Image 09](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-VS09.png)
+  *Note:* The initial execution of the application will create the LocalDB database with some basic data. As a result the first time the application is run will take a bit longer.
+- You should see two browser windows.
+  ![Image 10](https://github.com/ExcelliMatrix/emFrameworkCore-Samples/blob/master/CodeGenSample/images/Setup-VS10.png)
 
