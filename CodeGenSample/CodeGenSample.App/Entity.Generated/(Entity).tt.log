@@ -1,0 +1,27 @@
+2019-12-07 @ 13:17:26.768 -- DictionaryEntry[''] = ''.
+2019-12-07 @ 13:17:26.769 -- DictionaryEntry['ClassNamespace'] = 'CodeGenSample.App.Entity'.
+2019-12-07 @ 13:17:26.770 -- Usings = 'CodeGenSample.AppTier'.
+2019-12-07 @ 13:17:26.771 -- Usings = 'CodeGenSample.Design.App'.
+2019-12-07 @ 13:17:26.772 -- Usings = 'emFrameworkCore.Core'.
+2019-12-07 @ 13:17:26.773 -- Usings = 'emFrameworkCore.Data'.
+2019-12-07 @ 13:17:26.774 -- Usings = 'emFrameworkCore.Database'.
+2019-12-07 @ 13:17:26.775 -- Usings = 'emFrameworkCore.Database.Extensions'.
+2019-12-07 @ 13:17:26.776 -- Usings = 'Newtonsoft.Json'.
+2019-12-07 @ 13:17:26.777 -- Usings = 'System'.
+2019-12-07 @ 13:17:26.778 -- Usings = 'System.Collections.Generic'.
+2019-12-07 @ 13:17:26.779 -- Usings = 'System.Data.SqlClient'.
+2019-12-07 @ 13:17:26.780 -- Usings = 'System.Linq'.
+2019-12-07 @ 13:17:26.780 -- FileTier = 'App'.
+2019-12-07 @ 13:17:26.782 -- FileType = 'CSharp'.
+2019-12-07 @ 13:17:26.785 -- Entities = 'Automobile/Automobiles'.
+2019-12-07 @ 13:17:26.786 -- Entities = 'AutomobilePart/AutomobileParts'.
+2019-12-07 @ 13:17:26.787 -- EntityAssemblyPath = '{{SolutionDir}}CodeGenSample.Design.App\CodeGenReference\CodeGenSample.Design.App.dll'.
+2019-12-07 @ 13:17:26.788 -- OutputFilenameTemplate = '{{Name}}{{FileTier}}Entity.generated.cs'.
+2019-12-07 @ 13:17:26.799 -- SolutionDir = 'C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\CodeGenSample\'.
+2019-12-07 @ 13:17:26.802 -- SolutionName = 'C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\CodeGenSample\CodeGenSample.sln'.
+2019-12-07 @ 13:17:26.804 -- Loading Assembly ('C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\CodeGenSample\CodeGenSample.Design.App\CodeGenReference\CodeGenSample.Design.App.dll').
+2019-12-07 @ 13:17:26.812 -- Reflecting on Assembly.
+2019-12-07 @ 13:17:26.834 -- Awaiting Garbage Collection.
+2019-12-07 @ 13:17:26.863 -- Garbage Collection Completed.
+2019-12-07 @ 13:17:26.899 -- C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\CodeGenSample\CodeGenSample.App\Entity.Generated\AutomobileAppEntity.generated.cs
+2019-12-07 @ 13:17:26.934 -- C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\CodeGenSample\CodeGenSample.App\Entity.Generated\AutomobilePartAppEntity.generated.cs

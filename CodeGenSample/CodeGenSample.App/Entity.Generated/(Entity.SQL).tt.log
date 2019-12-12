@@ -1,0 +1,21 @@
+2019-12-07 @ 13:51:42.640 -- DictionaryEntry[''] = ''.
+2019-12-07 @ 13:51:42.642 -- DictionaryEntry['ClassNamespace'] = 'CodeGenSample.App.Entity'.
+2019-12-07 @ 13:51:42.643 -- Usings = 'CodeGenSample.Design.App'.
+2019-12-07 @ 13:51:42.644 -- Usings = 'emFrameworkCore.Core'.
+2019-12-07 @ 13:51:42.645 -- Usings = 'emFrameworkCore.Data'.
+2019-12-07 @ 13:51:42.646 -- Usings = 'emFrameworkCore.Database.Extensions'.
+2019-12-07 @ 13:51:42.647 -- Usings = 'System.Data.SqlClient'.
+2019-12-07 @ 13:51:42.648 -- FileTier = 'App'.
+2019-12-07 @ 13:51:42.649 -- FileType = 'CSharp'.
+2019-12-07 @ 13:51:42.650 -- Entities = 'Automobile/Automobiles'.
+2019-12-07 @ 13:51:42.651 -- Entities = 'AutomobilePart/AutomobileParts'.
+2019-12-07 @ 13:51:42.652 -- EntityAssemblyPath = '{{SolutionDir}}CodeGenSample.Design.App\CodeGenReference\CodeGenSample.Design.App.dll'.
+2019-12-07 @ 13:51:42.653 -- OutputFilenameTemplate = '{{Name}}{{FileTier}}Entity.generated.sql.cs'.
+2019-12-07 @ 13:51:42.665 -- SolutionDir = 'C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\CodeGenSample\'.
+2019-12-07 @ 13:51:42.668 -- SolutionName = 'C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\CodeGenSample\CodeGenSample.sln'.
+2019-12-07 @ 13:51:42.670 -- Loading Assembly ('C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\CodeGenSample\CodeGenSample.Design.App\CodeGenReference\CodeGenSample.Design.App.dll').
+2019-12-07 @ 13:51:42.678 -- Reflecting on Assembly.
+2019-12-07 @ 13:51:42.698 -- Awaiting Garbage Collection.
+2019-12-07 @ 13:51:42.726 -- Garbage Collection Completed.
+2019-12-07 @ 13:51:42.735 -- C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\CodeGenSample\CodeGenSample.App\Entity.Generated\AutomobileAppEntity.generated.sql.cs
+2019-12-07 @ 13:51:42.781 -- C:\Devel\GitHub\ExcelliMatrix\emFrameworkCore-Samples\CodeGenSample\CodeGenSample.App\Entity.Generated\AutomobilePartAppEntity.generated.sql.cs
