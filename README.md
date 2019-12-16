@@ -1,7 +1,7 @@
 # emFrameworkCore-Samples
 Examples of using emFrameworkCore with .Net Core
 
-## Also Vitis
+## Also Visit
 [ExcelliMatrix](https://www.ExcelliMatrix.com)
 
 ## NuGet Packages
