@@ -141,7 +141,7 @@
   <ItemGroup>
     <PackageReference Include="emFrameworkCore.Core" Version="1.22.0" />
     <PackageReference Include="emFrameworkCore.Data" Version="1.17.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
   <ItemGroup>
